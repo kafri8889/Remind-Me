@@ -2,6 +2,7 @@ package com.anafthdev.remindme.ui.remind_me
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.anafthdev.remindme.data.model.Reminder
 import com.anafthdev.remindme.data.repository.ReminderRepository
 import com.anafthdev.remindme.utils.RemindMeContentType
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -38,6 +39,12 @@ class RemindMeViewModel @Inject constructor(
 		}
 	}
 	
+	fun updateReminder(reminder: Reminder) {
+		viewModelScope.launch {
+			reminderRepository.updateReminder(reminder)
+		}
+	}
+	
 	fun setSelectedReminder(reminderID: Int, contentType: RemindMeContentType) {
 		/**
 		 * We only set isDetailOnlyOpen to true when it's only single pane layout
@@ -53,7 +60,7 @@ class RemindMeViewModel @Inject constructor(
 		_uiState.value = _uiState
 			.value.copy(
 				isDetailOnlyOpen = false,
-				selectedReminder = _uiState.value.reminders.first()
+				selectedReminder = null
 			)
 	}
 

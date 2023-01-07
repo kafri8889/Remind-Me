@@ -12,6 +12,7 @@ import androidx.navigation.compose.rememberNavController
 import androidx.window.layout.DisplayFeature
 import androidx.window.layout.FoldingFeature
 import com.anafthdev.remindme.data.RemindMeRoute
+import com.anafthdev.remindme.data.model.Reminder
 import com.anafthdev.remindme.ui.main.MainScreen
 import com.anafthdev.remindme.utils.*
 
@@ -21,7 +22,8 @@ fun RemindMeApp(
 	windowSize: WindowSizeClass,
 	displayFeatures: List<DisplayFeature>,
 	closeReminderScreen: () -> Unit = {},
-	navigateToReminder: (Int, RemindMeContentType) -> Unit = { _, _ -> }
+	navigateToReminder: (Int, RemindMeContentType) -> Unit = { _, _ -> },
+	updateReminder: (Reminder) -> Unit = {}
 ) {
 	
 	var contentType by remember { mutableStateOf(RemindMeContentType.SINGLE_PANE) }
@@ -67,7 +69,8 @@ fun RemindMeApp(
 		displayFeatures = displayFeatures,
 		remindMeUiState = uiState,
 		closeReminderScreen = closeReminderScreen,
-		navigateToReminder = navigateToReminder
+		navigateToReminder = navigateToReminder,
+		updateReminder = updateReminder
 	)
 }
 
@@ -78,7 +81,8 @@ private fun RemindMeNavigationWrapper(
 	displayFeatures: List<DisplayFeature>,
 	remindMeUiState: RemindMeUiState,
 	closeReminderScreen: () -> Unit,
-	navigateToReminder: (Int, RemindMeContentType) -> Unit
+	navigateToReminder: (Int, RemindMeContentType) -> Unit,
+	updateReminder: (Reminder) -> Unit
 ) {
 	val navController = rememberNavController()
 	
@@ -88,7 +92,8 @@ private fun RemindMeNavigationWrapper(
 		displayFeatures = displayFeatures,
 		remindMeUiState = remindMeUiState,
 		closeReminderScreen = closeReminderScreen,
-		navigateToReminder = navigateToReminder
+		navigateToReminder = navigateToReminder,
+		updateReminder = updateReminder
 	)
 }
 
@@ -100,6 +105,7 @@ private fun RemindMeNavHost(
 	remindMeUiState: RemindMeUiState,
 	closeReminderScreen: () -> Unit,
 	navigateToReminder: (Int, RemindMeContentType) -> Unit,
+	updateReminder: (Reminder) -> Unit,
 	modifier: Modifier = Modifier,
 ) {
 	NavHost(
@@ -113,7 +119,8 @@ private fun RemindMeNavHost(
 				remindMeUiState = remindMeUiState,
 				displayFeatures = displayFeatures,
 				closeReminderScreen = closeReminderScreen,
-				navigateToReminder = navigateToReminder
+				navigateToReminder = navigateToReminder,
+				updateReminder = updateReminder
 			)
 		}
 		composable(RemindMeRoute.SETTING) {

@@ -3,6 +3,8 @@ package com.anafthdev.remindme.ui.main
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.lazy.items
@@ -18,6 +20,7 @@ import com.anafthdev.remindme.data.model.Reminder
 import com.anafthdev.remindme.extension.toast
 import com.anafthdev.remindme.ui.remind_me.RemindMeUiState
 import com.anafthdev.remindme.uicomponent.RemindMeTopAppBar
+import com.anafthdev.remindme.uicomponent.ReminderItem
 import com.anafthdev.remindme.utils.RemindMeContentType
 import com.google.accompanist.adaptive.HorizontalTwoPaneStrategy
 import com.google.accompanist.adaptive.TwoPane
@@ -28,7 +31,8 @@ fun MainScreen(
 	displayFeatures: List<DisplayFeature>,
 	remindMeUiState: RemindMeUiState,
 	closeReminderScreen: () -> Unit,
-	navigateToReminder: (Int, RemindMeContentType) -> Unit
+	navigateToReminder: (Int, RemindMeContentType) -> Unit,
+	updateReminder: (Reminder) -> Unit
 ) {
 	
 	/**
@@ -54,7 +58,8 @@ fun MainScreen(
 					reminders = remindMeUiState.reminders,
 					contentType = contentType,
 					reminderLazyListState = reminderLazyListState,
-					navigateToReminder = navigateToReminder
+					navigateToReminder = navigateToReminder,
+					updateReminder = updateReminder
 				)
 			},
 			second = {
@@ -71,7 +76,8 @@ fun MainScreen(
 				remindMeUiState = remindMeUiState,
 				reminderLazyListState = reminderLazyListState,
 				closeDetailScreen = closeReminderScreen,
-				navigateToReminder = navigateToReminder
+				navigateToReminder = navigateToReminder,
+				updateReminder = updateReminder
 			)
 		}
 	}
@@ -83,7 +89,8 @@ fun RemindMeSinglePaneContent(
 	reminderLazyListState: LazyListState,
 	modifier: Modifier = Modifier,
 	closeDetailScreen: () -> Unit,
-	navigateToReminder: (Int, RemindMeContentType) -> Unit
+	navigateToReminder: (Int, RemindMeContentType) -> Unit,
+	updateReminder: (Reminder) -> Unit
 ) {
 	
 	if (remindMeUiState.selectedReminder != null && remindMeUiState.isDetailOnlyOpen) {
@@ -103,7 +110,8 @@ fun RemindMeSinglePaneContent(
 			contentType = RemindMeContentType.SINGLE_PANE,
 			reminderLazyListState = reminderLazyListState,
 			modifier = modifier,
-			navigateToReminder = navigateToReminder
+			navigateToReminder = navigateToReminder,
+			updateReminder = updateReminder
 		)
 	}
 }
@@ -114,7 +122,8 @@ fun RemindMeReminderList(
 	contentType: RemindMeContentType,
 	reminderLazyListState: LazyListState,
 	modifier: Modifier = Modifier,
-	navigateToReminder: (Int, RemindMeContentType) -> Unit
+	navigateToReminder: (Int, RemindMeContentType) -> Unit,
+	updateReminder: (Reminder) -> Unit
 ) {
 
 	LazyColumn(
@@ -133,7 +142,23 @@ fun RemindMeReminderList(
 			items = reminders,
 			key = { item: Reminder -> item.id }
 		) { reminder ->
-			// TODO: Reminder item
+			ReminderItem(
+				reminder = reminder,
+				is24Hour = true, // TODO: From datastore
+				onClick = {
+					navigateToReminder(reminder.id, contentType)
+				},
+				onCheckedChange = { isActive ->
+					updateReminder(
+						reminder.copy(
+							isActive = isActive
+						)
+					)
+				},
+				modifier = Modifier
+					.padding(8.dp)
+					.fillMaxWidth()
+			)
 		}
 	}
 }
