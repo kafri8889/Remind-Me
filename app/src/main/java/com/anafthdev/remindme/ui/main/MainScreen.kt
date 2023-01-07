@@ -16,6 +16,8 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.window.layout.DisplayFeature
 import com.anafthdev.remindme.data.RemindMeScreenRoute
+import com.anafthdev.remindme.data.RemindMeTopLevelDestination
+import com.anafthdev.remindme.data.RemindMeTopLevelDestinations
 import com.anafthdev.remindme.data.model.Reminder
 import com.anafthdev.remindme.extension.toast
 import com.anafthdev.remindme.ui.remind_me.RemindMeUiState
@@ -30,6 +32,7 @@ fun MainScreen(
 	contentType: RemindMeContentType,
 	displayFeatures: List<DisplayFeature>,
 	remindMeUiState: RemindMeUiState,
+	navigateToTopLevelDestination: (RemindMeTopLevelDestination) -> Unit,
 	closeReminderScreen: () -> Unit,
 	navigateToReminder: (Int, RemindMeContentType) -> Unit,
 	updateReminder: (Reminder) -> Unit
@@ -58,6 +61,7 @@ fun MainScreen(
 					reminders = remindMeUiState.reminders,
 					contentType = contentType,
 					reminderLazyListState = reminderLazyListState,
+					navigateToTopLevelDestination = navigateToTopLevelDestination,
 					navigateToReminder = navigateToReminder,
 					updateReminder = updateReminder
 				)
@@ -75,6 +79,7 @@ fun MainScreen(
 			RemindMeSinglePaneContent(
 				remindMeUiState = remindMeUiState,
 				reminderLazyListState = reminderLazyListState,
+				navigateToTopLevelDestination = navigateToTopLevelDestination,
 				closeDetailScreen = closeReminderScreen,
 				navigateToReminder = navigateToReminder,
 				updateReminder = updateReminder
@@ -88,6 +93,7 @@ fun RemindMeSinglePaneContent(
 	remindMeUiState: RemindMeUiState,
 	reminderLazyListState: LazyListState,
 	modifier: Modifier = Modifier,
+	navigateToTopLevelDestination: (RemindMeTopLevelDestination) -> Unit,
 	closeDetailScreen: () -> Unit,
 	navigateToReminder: (Int, RemindMeContentType) -> Unit,
 	updateReminder: (Reminder) -> Unit
@@ -109,9 +115,10 @@ fun RemindMeSinglePaneContent(
 			reminders = remindMeUiState.reminders,
 			contentType = RemindMeContentType.SINGLE_PANE,
 			reminderLazyListState = reminderLazyListState,
-			modifier = modifier,
+			navigateToTopLevelDestination = navigateToTopLevelDestination,
 			navigateToReminder = navigateToReminder,
-			updateReminder = updateReminder
+			updateReminder = updateReminder,
+			modifier = modifier
 		)
 	}
 }
@@ -122,6 +129,7 @@ fun RemindMeReminderList(
 	contentType: RemindMeContentType,
 	reminderLazyListState: LazyListState,
 	modifier: Modifier = Modifier,
+	navigateToTopLevelDestination: (RemindMeTopLevelDestination) -> Unit,
 	navigateToReminder: (Int, RemindMeContentType) -> Unit,
 	updateReminder: (Reminder) -> Unit
 ) {
@@ -134,7 +142,10 @@ fun RemindMeReminderList(
 			RemindMeTopAppBar(
 				route = RemindMeScreenRoute.REMINDER_LIST,
 				contentType = contentType,
-				onNavigationIconClicked = {}
+				onNavigationIconClicked = {},
+				onSettingClicked = {
+					navigateToTopLevelDestination(RemindMeTopLevelDestinations.setting)
+				}
 			)
 		}
 		

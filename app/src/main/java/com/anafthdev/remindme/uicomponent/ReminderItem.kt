@@ -12,6 +12,7 @@ import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -20,6 +21,7 @@ import com.anafthdev.remindme.data.local.LocalRemindersDataProvider
 import com.anafthdev.remindme.data.model.Reminder
 import com.anafthdev.remindme.extension.convert24HourTo12Hour
 import com.anafthdev.remindme.extension.hourMinuteFormat
+import com.anafthdev.remindme.extension.toast
 import com.anafthdev.remindme.theme.RemindMeTheme
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalFoundationApi::class)
@@ -31,6 +33,8 @@ fun ReminderItem(
 	onClick: () -> Unit,
 	onCheckedChange: (Boolean) -> Unit
 ) {
+	
+	val context = LocalContext.current
 	
 	val time = remember(reminder) {
 		val (hour, format) = if (is24Hour) hourMinuteFormat(reminder.hour) to ""
@@ -86,7 +90,9 @@ fun ReminderItem(
 					items(reminder.messages) { message ->
 						FilterChip(
 							selected = true,
-							onClick = {},
+							onClick = {
+								message.toast(context)
+							},
 							label = {
 								Text(
 									text = message,

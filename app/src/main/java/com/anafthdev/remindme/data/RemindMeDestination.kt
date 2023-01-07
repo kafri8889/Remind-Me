@@ -18,6 +18,7 @@ package com.anafthdev.remindme.data
 
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
+import com.anafthdev.remindme.R
 
 object RemindMeRoute {
 	const val HOME = "Home"
@@ -31,9 +32,9 @@ object RemindMeScreenRoute {
 
 data class RemindMeTopLevelDestination(
 	val route: String,
-//	val selectedIcon: ImageVector,
+	val selectedIcon: Int,
 //	val unselectedIcon: ImageVector,
-//	val iconTextId: Int
+	val iconTextId: Int
 )
 
 class RemindMeNavigationActions(private val navController: NavHostController) {
@@ -55,17 +56,25 @@ class RemindMeNavigationActions(private val navController: NavHostController) {
 	}
 }
 
-val TOP_LEVEL_DESTINATIONS = listOf(
-	RemindMeTopLevelDestination(
+object RemindMeTopLevelDestinations {
+	
+	val home = RemindMeTopLevelDestination(
 		route = RemindMeRoute.HOME,
-//		selectedIcon = Icons.Default.Inbox,
+		selectedIcon = R.drawable.ic_dashboard,
 //		unselectedIcon = Icons.Default.Inbox,
-//		iconTextId = R.string.tab_inbox
-	),
-	RemindMeTopLevelDestination(
-		route = RemindMeRoute.SETTING,
-//		selectedIcon = Icons.Default.Article,
-//		unselectedIcon = Icons.Default.Article,
-//		iconTextId = R.string.tab_article
+		iconTextId = R.string.tab_home
 	)
+	
+	val setting = RemindMeTopLevelDestination(
+		route = RemindMeRoute.SETTING,
+		selectedIcon = R.drawable.ic_setting,
+//		unselectedIcon = Icons.Default.Article,
+		iconTextId = R.string.tab_setting
+	)
+	
+}
+
+val TOP_LEVEL_DESTINATIONS = listOf(
+	RemindMeTopLevelDestinations.home,
+	RemindMeTopLevelDestinations.setting
 )

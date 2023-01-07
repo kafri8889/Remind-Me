@@ -2,4 +2,7 @@
     <string name="app_name">Remind Me</string>
     <string name="select_date">Select date</string>
     <string name="select_time">Select time</string>
+    <string name="new_reminder">New reminder</string>
+    <string name="tab_home">Home</string>
+    <string name="tab_setting">Setting</string>
 </resources>

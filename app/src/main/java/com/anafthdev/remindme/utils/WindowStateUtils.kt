@@ -54,7 +54,7 @@ fun isSeparating(foldFeature: FoldingFeature?): Boolean {
  * Different type of navigation supported by app depending on device size and state.
  */
 enum class RemindMeNavigationType {
-	BOTTOM_NAVIGATION, NAVIGATION_RAIL, PERMANENT_NAVIGATION_DRAWER
+	TOP_APP_BAR, NAVIGATION_RAIL, PERMANENT_NAVIGATION_DRAWER
 }
 
 /**
