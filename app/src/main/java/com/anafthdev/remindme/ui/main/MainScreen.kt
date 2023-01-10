@@ -21,6 +21,7 @@ import com.anafthdev.remindme.data.RemindMeTopLevelDestinations
 import com.anafthdev.remindme.data.model.Reminder
 import com.anafthdev.remindme.extension.toast
 import com.anafthdev.remindme.ui.remind_me.RemindMeUiState
+import com.anafthdev.remindme.ui.reminder_detail.ReminderDetailScreen
 import com.anafthdev.remindme.uicomponent.RemindMeTopAppBar
 import com.anafthdev.remindme.uicomponent.ReminderItem
 import com.anafthdev.remindme.utils.RemindMeContentType
@@ -204,7 +205,7 @@ fun RemindMeReminderDetail(
 		}
 		
 		item {
-			// TODO: Reminder detail screen
+			ReminderDetailScreen()
 		}
 	}
 }
