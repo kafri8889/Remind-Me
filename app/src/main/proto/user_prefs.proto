@@ -1,0 +1,7 @@
+syntax = "proto3";
+option java_package = "com.anafthdev.remindme";
+option java_multiple_files = true;
+
+message UserPreferences {
+  bool is24Hour = 1; // true
+}
