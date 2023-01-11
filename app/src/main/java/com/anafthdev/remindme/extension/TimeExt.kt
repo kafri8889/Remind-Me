@@ -1,5 +1,7 @@
 package com.anafthdev.remindme.extension
 
+import androidx.annotation.IntRange
+
 /**
  * @param hourOrMinute 0 - 23
  */
@@ -13,4 +15,22 @@ fun hourMinuteFormat(hourOrMinute: Int): String {
  */
 fun convert24HourTo12Hour(hour: Int): Pair<String, String> {
 	return hourMinuteFormat(if (hour > 12) hour - 12 else hour) to (if (hour > 12) "pm" else "am")
+}
+
+/**
+ * @param hour 0 - 11
+ * @return hour in 24 hour format (0 - 23)
+ */
+fun convert12HourTo24Hour(
+	@IntRange(from = 0L, to = 11L) hour: Int,
+	hourClockType: String = "am"
+): Int {
+	return when {
+		hourClockType.equals("am", true) -> {
+			if (hour > 23) hour - 12
+			else hour
+		}
+		hourClockType.equals("pm", true) -> hour + 12
+		else -> hour
+	}
 }
