@@ -19,8 +19,7 @@ fun TimeSelectorPreview() {
 	
 	TimeSelector(
 		hours = 1,
-		minutes = 24,
-		is24Hour = false
+		minutes = 24
 	)
 }
 
@@ -28,7 +27,6 @@ fun TimeSelectorPreview() {
 fun TimeSelector(
 	hours: Int,
 	minutes: Int,
-	is24Hour: Boolean,
 	modifier: Modifier = Modifier,
 	onTimeTypeChanged: (TimeType) -> Unit = {}
 ) {
