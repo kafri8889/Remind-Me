@@ -4,7 +4,9 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
+import com.anafthdev.remindme.data.HourClockType
 import com.anafthdev.remindme.data.TimeType
+import com.anafthdev.remindme.extension.convert12HourTo24Hour
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 
@@ -24,9 +26,15 @@ class ReminderDetailViewModel @Inject constructor(
 	
 	var clockPositionValue by mutableStateOf(0)
 	    private set
- 
+	
+	var animateClockPositionValue by mutableStateOf(true)
+	    private set
+	
+	var hourClockType by mutableStateOf(HourClockType.AM)
+		private set
 	
 	fun updateClockPosition(pos: Int) {
+		animateClockPositionValue = false
 		clockPositionValue = pos
 		
 		when (selectedTimeType) {
@@ -45,6 +53,17 @@ class ReminderDetailViewModel @Inject constructor(
 		clockPositionValue = when (type) {
 			TimeType.Hours -> hours
 			TimeType.Minutes -> minutes
+		}
+		
+		animateClockPositionValue = true
+	}
+	
+	fun updateHourClockType(type: HourClockType) {
+		hourClockType = type
+		
+		hours = when (type) {
+			HourClockType.AM -> convert12HourTo24Hour(hours, "am")
+			HourClockType.PM -> convert12HourTo24Hour(hours, "pm")
 		}
 	}
 	
