@@ -7,6 +7,7 @@ import androidx.lifecycle.ViewModel
 import com.anafthdev.remindme.data.HourClockType
 import com.anafthdev.remindme.data.TimeType
 import com.anafthdev.remindme.extension.convert12HourTo24Hour
+import com.anafthdev.remindme.extension.convert24HourTo12Hour
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 
@@ -39,7 +40,10 @@ class ReminderDetailViewModel @Inject constructor(
 		
 		when (selectedTimeType) {
 			TimeType.Hours -> {
-				hours = pos
+				hours = when (hourClockType) {
+					HourClockType.AM -> convert12HourTo24Hour((pos - 1).coerceAtLeast(0), "am")
+					HourClockType.PM -> convert12HourTo24Hour((pos - 1).coerceAtLeast(0), "pm")
+				}
 			}
 			TimeType.Minutes -> {
 				minutes = pos
@@ -51,7 +55,7 @@ class ReminderDetailViewModel @Inject constructor(
 		selectedTimeType = type
 		
 		clockPositionValue = when (type) {
-			TimeType.Hours -> hours
+			TimeType.Hours -> convert24HourTo12Hour(hours).first.toInt()
 			TimeType.Minutes -> minutes
 		}
 		
@@ -65,6 +69,8 @@ class ReminderDetailViewModel @Inject constructor(
 			HourClockType.AM -> convert12HourTo24Hour(hours, "am")
 			HourClockType.PM -> convert12HourTo24Hour(hours, "pm")
 		}
+		
+		clockPositionValue = convert24HourTo12Hour(hours).first.toInt()
 	}
 	
 }

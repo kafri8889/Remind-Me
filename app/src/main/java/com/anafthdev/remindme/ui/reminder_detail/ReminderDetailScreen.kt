@@ -7,6 +7,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.rotate
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.anafthdev.remindme.uicomponent.HourClockSelector
 import com.anafthdev.remindme.uicomponent.TimePicker
@@ -14,7 +15,7 @@ import com.anafthdev.remindme.uicomponent.TimeSelector
 
 @Composable
 fun ReminderDetailScreen() {
-	
+	// TODO: TimePicker minute, animate text
 	val viewModel = hiltViewModel<ReminderDetailViewModel>()
 
 	Column(
@@ -33,6 +34,7 @@ fun ReminderDetailScreen() {
 				modifier = Modifier
 					.fillMaxWidth(0.7f)
 					.aspectRatio(1f / 1f)
+					.rotate(180f)
 			)
 			
 			Column(
@@ -54,7 +56,7 @@ fun ReminderDetailScreen() {
 }
 
 @Composable
-fun TimePicker(
+private fun TimePicker(
 	pos: Int,
 	modifier: Modifier = Modifier,
 	animate: Boolean = true,

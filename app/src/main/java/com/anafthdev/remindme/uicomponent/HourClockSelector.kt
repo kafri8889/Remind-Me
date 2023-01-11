@@ -26,7 +26,9 @@ fun HourClockSelector(
 				type = HourClockType.AM,
 				selected = type == HourClockType.AM,
 				onClick = {
-					onValueChanged(HourClockType.AM)
+					if (type == HourClockType.PM) {
+						onValueChanged(HourClockType.AM)
+					}
 				}
 			)
 			
@@ -34,7 +36,9 @@ fun HourClockSelector(
 				type = HourClockType.PM,
 				selected = type == HourClockType.PM,
 				onClick = {
-					onValueChanged(HourClockType.PM)
+					if (type == HourClockType.AM) {
+						onValueChanged(HourClockType.PM)
+					}
 				}
 			)
 		}
@@ -51,7 +55,7 @@ private fun HourClockItem(
 ) {
 	
 	val containerColor by animateColorAsState(
-		targetValue = if (selected) MaterialTheme.colorScheme.tertiaryContainer
+		targetValue = if (selected) MaterialTheme.colorScheme.secondaryContainer
 		else MaterialTheme.colorScheme.inverseOnSurface,
 		animationSpec = tween(
 			durationMillis = 500

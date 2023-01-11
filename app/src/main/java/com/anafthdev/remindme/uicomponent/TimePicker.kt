@@ -30,7 +30,7 @@ fun TimePickerPreview() {
 		initialValue = 1,
 		maxValue = 12,
 		primaryColor = Color.Green,
-		circleRadius = 230f,
+		circleRadius = 20f,
 		onPositionChange = {
 		
 		},
@@ -116,7 +116,7 @@ fun TimePicker(
 						}
 					)
 				}
-		){
+		) {
 			val width = size.width
 			val height = size.height
 			val circleThickness = width / 8f
@@ -149,7 +149,7 @@ fun TimePicker(
 				)
 				
 				rotate(
-					angleInDegrees,
+					degrees = angleInDegrees,
 					pivot = start
 				) {
 					drawLine(

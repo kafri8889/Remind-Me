@@ -14,7 +14,7 @@ fun hourMinuteFormat(hourOrMinute: Int): String {
  * @return [[hour, hour format]] | [[06, "pm"]]
  */
 fun convert24HourTo12Hour(hour: Int): Pair<String, String> {
-	return hourMinuteFormat(if (hour > 12) hour - 12 else hour) to (if (hour > 12) "pm" else "am")
+	return hourMinuteFormat(if (hour > 11) hour - 12 else hour) to (if (hour > 12) "pm" else "am")
 }
 
 /**
@@ -27,7 +27,7 @@ fun convert12HourTo24Hour(
 ): Int {
 	return when {
 		hourClockType.equals("am", true) -> {
-			if (hour > 23) hour - 12
+			if (hour > 11) hour - 12
 			else hour
 		}
 		hourClockType.equals("pm", true) -> hour + 12
