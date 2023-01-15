@@ -28,14 +28,13 @@ class ReminderDetailViewModel @Inject constructor(
 	var clockPositionValue by mutableStateOf(0)
 	    private set
 	
-	var animateClockPositionValue by mutableStateOf(true)
+	var animateClockPositionValue by mutableStateOf(false)
 	    private set
 	
 	var hourClockType by mutableStateOf(HourClockType.AM)
 		private set
 	
 	fun updateClockPosition(pos: Int) {
-		animateClockPositionValue = false
 		clockPositionValue = pos
 		
 		when (selectedTimeType) {
@@ -46,7 +45,7 @@ class ReminderDetailViewModel @Inject constructor(
 				}
 			}
 			TimeType.Minutes -> {
-				minutes = pos
+				minutes = (pos - 1).coerceAtLeast(0)
 			}
 		}
 	}
@@ -71,6 +70,10 @@ class ReminderDetailViewModel @Inject constructor(
 		}
 		
 		clockPositionValue = convert24HourTo12Hour(hours).first.toInt()
+	}
+	
+	fun updateAnimateClockPositionValue(animate: Boolean) {
+		animateClockPositionValue = animate
 	}
 	
 }

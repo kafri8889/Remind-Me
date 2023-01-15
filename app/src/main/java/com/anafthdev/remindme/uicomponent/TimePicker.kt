@@ -28,7 +28,7 @@ fun TimePickerPreview() {
 	
 	TimePicker(
 		initialValue = 1,
-		maxValue = 12,
+		maxValue = 100,
 		primaryColor = Color.Green,
 		circleRadius = 20f,
 		onPositionChange = {
