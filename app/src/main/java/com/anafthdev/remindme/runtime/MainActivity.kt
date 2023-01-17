@@ -103,7 +103,7 @@ class MainActivity : FragmentActivity() {
 		pickerManager = PickerManager(this, pickerListener)
 		
 		setContent {
-			RemindMeTheme {
+			RemindMeTheme(darkTheme = false) {
 				val windowSize = calculateWindowSizeClass(this)
 				val displayFeatures = calculateDisplayFeatures(this)
 				
