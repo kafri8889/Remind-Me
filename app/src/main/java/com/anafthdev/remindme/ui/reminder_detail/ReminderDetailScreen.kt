@@ -19,7 +19,7 @@ import com.anafthdev.remindme.uicomponent.TimeSelector
 
 @Composable
 fun ReminderDetailScreen() {
-	// TODO: TimePicker minute, animate text
+	
 	val viewModel = hiltViewModel<ReminderDetailViewModel>()
 
 	Column(

@@ -84,7 +84,7 @@ private fun TimeItem(
 			containerColor = containerColor
 		)
 	) {
-		Text(
+		AnimatedTextNumber(
 			text = hourMinuteFormat(value),
 			modifier = Modifier
 				.padding(12.dp)
