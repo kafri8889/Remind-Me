@@ -54,8 +54,8 @@ class ReminderDetailViewModel @Inject constructor(
 		selectedTimeType = type
 		
 		clockPositionValue = when (type) {
-			TimeType.Hours -> convert24HourTo12Hour(hours).first.toInt()
-			TimeType.Minutes -> minutes
+			TimeType.Hours -> convert24HourTo12Hour(hours).first.toInt() + 1
+			TimeType.Minutes -> minutes + 1
 		}
 		
 		animateClockPositionValue = true
