@@ -41,6 +41,7 @@ fun ReminderDetailScreen() {
 			TimePicker(
 				pos = viewModel.clockPositionValue,
 				maxValue = if (viewModel.selectedTimeType == TimeType.Hours) 12 else 60,
+				timeType = viewModel.selectedTimeType,
 				hourClockType = viewModel.hourClockType,
 				animate = viewModel.animateClockPositionValue,
 				onPositionChange = viewModel::updateClockPosition,
@@ -73,6 +74,7 @@ fun ReminderDetailScreen() {
 private fun TimePicker(
 	pos: Int,
 	maxValue: Int,
+	timeType: TimeType,
 	hourClockType: HourClockType,
 	modifier: Modifier = Modifier,
 	animate: Boolean = true,
@@ -84,7 +86,10 @@ private fun TimePicker(
 		contentAlignment = Alignment.Center,
 		modifier = modifier
 	) {
-		ShowedClockTime(hourClockType = hourClockType) {
+		ShowedClockTime(
+			timeType = timeType,
+			hourClockType = hourClockType
+		) {
 			val clockPositionValue by animateIntAsState(
 				targetValue = pos,
 				animationSpec = tween(600),
@@ -138,6 +143,7 @@ private fun TimePicker(
 
 @Composable
 fun ShowedClockTime(
+	timeType: TimeType,
 	hourClockType: HourClockType,
 	modifier: Modifier = Modifier,
 	content: @Composable () -> Unit
@@ -149,7 +155,9 @@ fun ShowedClockTime(
 	) {
 		AnimatedScaleText(
 			text = stringResource(
-				id = if (hourClockType == HourClockType.AM) R.string.num_zero else R.string.num_twelve
+				id = if (timeType == TimeType.Hours) {
+					if (hourClockType == HourClockType.AM) R.string.num_zero else R.string.num_twelve
+				} else R.string.num_zero
 			)
 		) {
 			Text(
@@ -165,7 +173,9 @@ fun ShowedClockTime(
 		) {
 			AnimatedScaleText(
 				text = stringResource(
-					id = if (hourClockType == HourClockType.AM) R.string.num_nine else R.string.num_twenty_one
+					id = if (timeType == TimeType.Hours) {
+						if (hourClockType == HourClockType.AM) R.string.num_nine else R.string.num_twenty_one
+					} else R.string.num_fourty_five
 				)
 			) {
 				Text(
@@ -187,7 +197,9 @@ fun ShowedClockTime(
 			
 			AnimatedScaleText(
 				text = stringResource(
-					id = if (hourClockType == HourClockType.AM) R.string.num_three else R.string.num_five_teen
+					id = if (timeType == TimeType.Hours) {
+						if (hourClockType == HourClockType.AM) R.string.num_three else R.string.num_five_teen
+					} else R.string.num_five_teen
 				)
 			) {
 				Text(
@@ -201,7 +213,9 @@ fun ShowedClockTime(
 		
 		AnimatedScaleText(
 			text = stringResource(
-				id = if (hourClockType == HourClockType.AM) R.string.num_six else R.string.num_eight_teen
+				id = if (timeType == TimeType.Hours) {
+					if (hourClockType == HourClockType.AM) R.string.num_six else R.string.num_eight_teen
+				} else R.string.num_thirty
 			)
 		) {
 			Text(
