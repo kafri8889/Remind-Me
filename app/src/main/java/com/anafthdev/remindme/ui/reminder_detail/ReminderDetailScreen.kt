@@ -6,6 +6,7 @@ import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.layout.*
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -13,10 +14,12 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.anafthdev.remindme.R
 import com.anafthdev.remindme.data.HourClockType
 import com.anafthdev.remindme.data.TimeType
+import com.anafthdev.remindme.uicomponent.AnimatedScaleText
 import com.anafthdev.remindme.uicomponent.HourClockSelector
 import com.anafthdev.remindme.uicomponent.TimePicker
 import com.anafthdev.remindme.uicomponent.TimeSelector
@@ -144,20 +147,34 @@ fun ShowedClockTime(
 		horizontalAlignment = Alignment.CenterHorizontally,
 		modifier = modifier
 	) {
-		Text(
+		AnimatedScaleText(
 			text = stringResource(
 				id = if (hourClockType == HourClockType.AM) R.string.num_zero else R.string.num_twelve
 			)
-		)
+		) {
+			Text(
+				text = it,
+				style = MaterialTheme.typography.titleMedium.copy(
+					fontWeight = FontWeight.SemiBold
+				)
+			)
+		}
 		
 		Row(
 			verticalAlignment = Alignment.CenterVertically
 		) {
-			Text(
+			AnimatedScaleText(
 				text = stringResource(
 					id = if (hourClockType == HourClockType.AM) R.string.num_nine else R.string.num_twenty_one
 				)
-			)
+			) {
+				Text(
+					text = it,
+					style = MaterialTheme.typography.titleMedium.copy(
+						fontWeight = FontWeight.SemiBold
+					)
+				)
+			}
 			
 			Box(
 				contentAlignment = Alignment.Center,
@@ -168,17 +185,31 @@ fun ShowedClockTime(
 				content()
 			}
 			
-			Text(
+			AnimatedScaleText(
 				text = stringResource(
 					id = if (hourClockType == HourClockType.AM) R.string.num_three else R.string.num_five_teen
 				)
-			)
+			) {
+				Text(
+					text = it,
+					style = MaterialTheme.typography.titleMedium.copy(
+						fontWeight = FontWeight.SemiBold
+					)
+				)
+			}
 		}
 		
-		Text(
+		AnimatedScaleText(
 			text = stringResource(
 				id = if (hourClockType == HourClockType.AM) R.string.num_six else R.string.num_eight_teen
 			)
-		)
+		) {
+			Text(
+				text = it,
+				style = MaterialTheme.typography.titleMedium.copy(
+					fontWeight = FontWeight.SemiBold
+				)
+			)
+		}
 	}
 }
