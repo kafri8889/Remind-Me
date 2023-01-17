@@ -120,7 +120,7 @@ fun TimePicker(
 		) {
 			val width = size.width
 			val height = size.height
-			val circleThickness = width / 8f
+			val circleThickness = width / 5f
 			
 			circleCenter = Offset(
 				x = width / 2f,
