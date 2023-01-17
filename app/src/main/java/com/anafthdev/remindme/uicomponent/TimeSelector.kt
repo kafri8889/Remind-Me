@@ -19,7 +19,8 @@ fun TimeSelectorPreview() {
 	
 	TimeSelector(
 		hours = 1,
-		minutes = 24
+		minutes = 24,
+		selectedTimeType = TimeType.Hours
 	)
 }
 
@@ -27,11 +28,10 @@ fun TimeSelectorPreview() {
 fun TimeSelector(
 	hours: Int,
 	minutes: Int,
+	selectedTimeType: TimeType,
 	modifier: Modifier = Modifier,
 	onTimeTypeChanged: (TimeType) -> Unit = {}
 ) {
-
-	var selectedTimeType by remember { mutableStateOf(TimeType.Hours) }
 	
 	Row(
 		verticalAlignment = Alignment.CenterVertically,
@@ -41,8 +41,7 @@ fun TimeSelector(
 			value = hours,
 			selected = selectedTimeType == TimeType.Hours,
 			onClick = {
-				selectedTimeType = TimeType.Hours
-				onTimeTypeChanged(selectedTimeType)
+				onTimeTypeChanged(TimeType.Hours)
 			}
 		)
 		
@@ -52,8 +51,7 @@ fun TimeSelector(
 			value = minutes,
 			selected = selectedTimeType == TimeType.Minutes,
 			onClick = {
-				selectedTimeType = TimeType.Minutes
-				onTimeTypeChanged(selectedTimeType)
+				onTimeTypeChanged(TimeType.Minutes)
 			}
 		)
 	}

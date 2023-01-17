@@ -58,6 +58,7 @@ fun ReminderDetailScreen() {
 				TimeSelector(
 					hours = viewModel.hours,
 					minutes = viewModel.minutes,
+					selectedTimeType = viewModel.selectedTimeType,
 					onTimeTypeChanged = viewModel::updateTimeType
 				)
 				
@@ -97,7 +98,7 @@ private fun TimePicker(
 			)
 			
 			AnimatedVisibility(
-				visible = maxValue == 12,
+				visible = timeType == TimeType.Hours,
 				enter = fadeIn(
 					animationSpec = tween(500)
 				),
@@ -118,7 +119,7 @@ private fun TimePicker(
 			}
 			
 			AnimatedVisibility(
-				visible = maxValue == 60,
+				visible = timeType == TimeType.Minutes,
 				enter = fadeIn(
 					animationSpec = tween(500)
 				),
