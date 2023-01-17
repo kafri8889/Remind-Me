@@ -8,10 +8,13 @@ import androidx.compose.material3.windowsizeclass.WindowSizeClass
 import androidx.compose.material3.windowsizeclass.calculateWindowSizeClass
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.runtime.SideEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.DpSize
 import androidx.compose.ui.unit.dp
+import androidx.core.view.WindowCompat
 import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.compose.ExperimentalLifecycleComposeApi
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -23,6 +26,7 @@ import com.anafthdev.remindme.ui.remind_me.RemindMeApp
 import com.anafthdev.remindme.ui.remind_me.RemindMeUiState
 import com.anafthdev.remindme.ui.remind_me.RemindMeViewModel
 import com.google.accompanist.adaptive.calculateDisplayFeatures
+import com.google.accompanist.systemuicontroller.rememberSystemUiController
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -100,15 +104,26 @@ class MainActivity : FragmentActivity() {
 	override fun onCreate(savedInstanceState: Bundle?) {
 		super.onCreate(savedInstanceState)
 		
+		WindowCompat.setDecorFitsSystemWindows(window, false)
+		
 		pickerManager = PickerManager(this, pickerListener)
 		
 		setContent {
 			RemindMeTheme(darkTheme = false) {
+				val systemUiController = rememberSystemUiController()
+				
 				val windowSize = calculateWindowSizeClass(this)
 				val displayFeatures = calculateDisplayFeatures(this)
 				
 				val uiState by remindMeViewModel.uiState.collectAsStateWithLifecycle()
 				val collectedPickerData by pickerData.collectAsStateWithLifecycle()
+				
+				SideEffect {
+					systemUiController.setSystemBarsColor(
+						color = Color.Transparent,
+						darkIcons = true
+					)
+				}
 				
 				CompositionLocalProvider(
 					LocalPickerData provides collectedPickerData,
