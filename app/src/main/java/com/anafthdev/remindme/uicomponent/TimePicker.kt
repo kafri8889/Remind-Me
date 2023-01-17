@@ -29,7 +29,7 @@ fun TimePickerPreview() {
 	TimePicker(
 		initialValue = 1,
 		maxValue = 100,
-		primaryColor = Color.Green,
+		activeTickColor = Color.Green,
 		circleRadius = 20f,
 		onPositionChange = {
 		
@@ -47,7 +47,8 @@ fun TimePicker(
 	circleRadius: Float,
 	minValue:Int = 0,
 	maxValue:Int = 100,
-	primaryColor: Color = MaterialTheme.colorScheme.primary,
+	activeTickColor: Color = MaterialTheme.colorScheme.onPrimaryContainer,
+	inactiveTickColor: Color = MaterialTheme.colorScheme.primary.copy(alpha = 0.24f),
 	onPositionChange: (Int)->Unit
 ) {
 	var circleCenter by remember {
@@ -129,8 +130,8 @@ fun TimePicker(
 			val outerRadius = circleRadius + circleThickness/2f
 			val gap = 32f  // Jarak line ke center
 			for (i in 0 .. (maxValue-minValue)){
-				val color = if(i < positionValue - minValue) primaryColor
-				else primaryColor.copy(alpha = 0.3f)
+				val color = if(i < positionValue - minValue) activeTickColor
+				else inactiveTickColor
 				
 				val angleInDegrees = i * 360f / (maxValue - minValue).toFloat()
 				val angleInRad = angleInDegrees * PI / 180f + PI/2f
