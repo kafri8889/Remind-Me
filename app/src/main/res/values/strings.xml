@@ -5,4 +5,12 @@
     <string name="new_reminder">New reminder</string>
     <string name="tab_home">Home</string>
     <string name="tab_setting">Setting</string>
+    <string name="num_three">3</string>
+    <string name="num_six">6</string>
+    <string name="num_nine">9</string>
+    <string name="num_twelve">12</string>
+    <string name="num_zero">0</string>
+    <string name="num_five_teen">15</string>
+    <string name="num_eight_teen">18</string>
+    <string name="num_twenty_one">21</string>
 </resources>
