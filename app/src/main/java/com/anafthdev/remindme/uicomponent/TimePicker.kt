@@ -13,6 +13,7 @@ import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.drawscope.rotate
 import androidx.compose.ui.input.pointer.pointerInput
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import kotlin.math.*
@@ -47,6 +48,8 @@ fun TimePicker(
 	circleRadius: Float,
 	minValue:Int = 0,
 	maxValue:Int = 100,
+	gap: Float = 3f * LocalDensity.current.density, // Jarak line ke center
+	circleThicknessFraction: Float = 0.094f * LocalDensity.current.density,
 	activeTickColor: Color = MaterialTheme.colorScheme.onPrimaryContainer,
 	inactiveTickColor: Color = MaterialTheme.colorScheme.primary.copy(alpha = 0.24f),
 	onPositionChange: (Int)->Unit
@@ -120,7 +123,7 @@ fun TimePicker(
 		) {
 			val width = size.width
 			val height = size.height
-			val circleThickness = width / 5f
+			val circleThickness = width * circleThicknessFraction
 			
 			circleCenter = Offset(
 				x = width / 2f,
@@ -128,7 +131,6 @@ fun TimePicker(
 			)
 			
 			val outerRadius = circleRadius + circleThickness/2f
-			val gap = 32f  // Jarak line ke center
 			for (i in 0 .. (maxValue-minValue)){
 				val color = if(i < positionValue - minValue) activeTickColor
 				else inactiveTickColor
