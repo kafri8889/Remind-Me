@@ -1,5 +1,6 @@
 package com.anafthdev.remindme.data.local
 
+import com.anafthdev.remindme.data.DayOfWeek
 import com.anafthdev.remindme.data.model.Reminder
 
 object LocalRemindersDataProvider {
@@ -11,6 +12,7 @@ object LocalRemindersDataProvider {
 			hour = 18,
 			minute = 23,
 			messages = listOf("Message 1", "Looooooooonnnnggggggggg Messageeeee", "Message 2"),
+			repeatOnDays = listOf(DayOfWeek.Sunday, DayOfWeek.Tuesday, DayOfWeek.Thursday, DayOfWeek.Friday),
 			isActive = true
 		),
 		Reminder(
@@ -19,6 +21,7 @@ object LocalRemindersDataProvider {
 			hour = 18,
 			minute = 23,
 			messages = listOf("Message 1", "Looooooooonnnnggggggggg Messageeeee", "Message 2"),
+			repeatOnDays = listOf(DayOfWeek.Monday, DayOfWeek.Thursday, DayOfWeek.Saturday),
 			isActive = false
 		),
 	)
