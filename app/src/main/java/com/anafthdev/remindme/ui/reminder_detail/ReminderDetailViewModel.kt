@@ -1,9 +1,11 @@
 package com.anafthdev.remindme.ui.reminder_detail
 
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
+import com.anafthdev.remindme.data.DayOfWeek
 import com.anafthdev.remindme.data.HourClockType
 import com.anafthdev.remindme.data.TimeType
 import com.anafthdev.remindme.extension.convert12HourTo24Hour
@@ -32,6 +34,9 @@ class ReminderDetailViewModel @Inject constructor(
 	    private set
 	
 	var hourClockType by mutableStateOf(HourClockType.AM)
+		private set
+	
+	var repeatOnDays = mutableStateListOf<DayOfWeek>()
 		private set
 	
 	fun updateClockPosition(pos: Int) {
@@ -74,6 +79,13 @@ class ReminderDetailViewModel @Inject constructor(
 	
 	fun updateAnimateClockPositionValue(animate: Boolean) {
 		animateClockPositionValue = animate
+	}
+	
+	fun updateRepeatOnDays(days: List<DayOfWeek>) {
+		repeatOnDays.apply {
+			clear()
+			addAll(days)
+		}
 	}
 	
 }

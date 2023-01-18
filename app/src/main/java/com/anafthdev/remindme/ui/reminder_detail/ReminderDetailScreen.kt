@@ -15,14 +15,12 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.anafthdev.remindme.R
 import com.anafthdev.remindme.data.HourClockType
 import com.anafthdev.remindme.data.TimeType
-import com.anafthdev.remindme.uicomponent.AnimatedScaleText
-import com.anafthdev.remindme.uicomponent.HourClockSelector
-import com.anafthdev.remindme.uicomponent.TimePicker
-import com.anafthdev.remindme.uicomponent.TimeSelector
+import com.anafthdev.remindme.uicomponent.*
 
 @Composable
 fun ReminderDetailScreen() {
@@ -66,6 +64,26 @@ fun ReminderDetailScreen() {
 					onValueChanged = viewModel::updateHourClockType
 				)
 			}
+		}
+		
+		Spacer(modifier = Modifier.height(16.dp))
+		
+		Padding(
+			horizontal = 8.dp
+		) {
+			Text(
+				text = stringResource(id = R.string.repeat),
+				style = MaterialTheme.typography.titleMedium
+			)
+			
+			Spacer(modifier = Modifier.height(8.dp))
+			
+			DayOfWeekSelector(
+				selectedDays = viewModel.repeatOnDays,
+				onSelectedDaysChanged = viewModel::updateRepeatOnDays,
+				modifier = Modifier
+					.fillMaxWidth()
+			)
 		}
 	}
 }
