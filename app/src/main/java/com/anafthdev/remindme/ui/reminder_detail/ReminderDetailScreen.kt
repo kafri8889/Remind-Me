@@ -40,7 +40,6 @@ fun ReminderDetailScreen() {
 		) {
 			TimePicker(
 				pos = viewModel.clockPositionValue,
-				maxValue = if (viewModel.selectedTimeType == TimeType.Hours) 12 else 60,
 				timeType = viewModel.selectedTimeType,
 				hourClockType = viewModel.hourClockType,
 				animate = viewModel.animateClockPositionValue,
@@ -74,7 +73,6 @@ fun ReminderDetailScreen() {
 @Composable
 private fun TimePicker(
 	pos: Int,
-	maxValue: Int,
 	timeType: TimeType,
 	hourClockType: HourClockType,
 	modifier: Modifier = Modifier,
