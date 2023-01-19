@@ -16,4 +16,5 @@
     <string name="num_thirty">30</string>
     <string name="num_fourty_five">45</string>
     <string name="repeat">Repeat</string>
+    <string name="reminder_name">Reminder name</string>
 </resources>
