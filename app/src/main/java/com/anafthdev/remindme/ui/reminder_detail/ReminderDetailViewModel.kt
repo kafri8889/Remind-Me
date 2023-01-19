@@ -36,6 +36,9 @@ class ReminderDetailViewModel @Inject constructor(
 	var hourClockType by mutableStateOf(HourClockType.AM)
 		private set
 	
+	var reminderName by mutableStateOf("")
+		private set
+	
 	var repeatOnDays = mutableStateListOf<DayOfWeek>()
 		private set
 	
@@ -86,6 +89,10 @@ class ReminderDetailViewModel @Inject constructor(
 			clear()
 			addAll(days)
 		}
+	}
+	
+	fun updateReminderName(name: String) {
+		reminderName = name
 	}
 	
 }

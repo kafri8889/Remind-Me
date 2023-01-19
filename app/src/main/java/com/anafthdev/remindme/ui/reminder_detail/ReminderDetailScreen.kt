@@ -1,18 +1,21 @@
 package com.anafthdev.remindme.ui.reminder_detail
 
-import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.*
 import androidx.compose.animation.core.animateIntAsState
 import androidx.compose.animation.core.tween
-import androidx.compose.animation.fadeIn
-import androidx.compose.animation.fadeOut
+import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.*
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
+import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
+import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.rotate
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.input.pointer.pointerInput
+import androidx.compose.ui.platform.LocalFocusManager
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -22,14 +25,24 @@ import com.anafthdev.remindme.data.HourClockType
 import com.anafthdev.remindme.data.TimeType
 import com.anafthdev.remindme.uicomponent.*
 
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalComposeUiApi::class,
+	ExperimentalAnimationApi::class
+)
 @Composable
 fun ReminderDetailScreen() {
+	
+	val focusManager = LocalFocusManager.current
 	
 	val viewModel = hiltViewModel<ReminderDetailViewModel>()
 
 	Column(
 		modifier = Modifier
 			.fillMaxSize()
+			.pointerInput(Unit) {
+				detectTapGestures {
+					focusManager.clearFocus()
+				}
+			}
 	) {
 		Box(
 			contentAlignment = Alignment.Center,
@@ -81,6 +94,54 @@ fun ReminderDetailScreen() {
 			DayOfWeekSelector(
 				selectedDays = viewModel.repeatOnDays,
 				onSelectedDaysChanged = viewModel::updateRepeatOnDays,
+				modifier = Modifier
+					.fillMaxWidth()
+			)
+			
+			
+			
+			Spacer(modifier = Modifier.height(16.dp))
+			
+			
+			
+			Text(
+				text = stringResource(id = R.string.reminder_name),
+				style = MaterialTheme.typography.titleMedium
+			)
+			
+			OutlinedTextField(
+				value = viewModel.reminderName,
+				onValueChange = viewModel::updateReminderName,
+				singleLine = true,
+				colors = TextFieldDefaults.outlinedTextFieldColors(
+					unfocusedBorderColor = Color.Transparent,
+					focusedBorderColor = Color.Transparent
+				),
+				placeholder = {
+					Text("Name")
+				},
+				trailingIcon = {
+					AnimatedVisibility(
+						visible = viewModel.reminderName.isNotBlank(),
+						enter = scaleIn(
+							animationSpec = tween(250)
+						),
+						exit = scaleOut(
+							animationSpec = tween(250)
+						)
+					) {
+						IconButton(
+							onClick = {
+								viewModel.updateReminderName("")
+							}
+						) {
+							Icon(
+								painter = painterResource(id = R.drawable.ic_close_circle),
+								contentDescription = null
+							)
+						}
+					}
+				},
 				modifier = Modifier
 					.fillMaxWidth()
 			)
