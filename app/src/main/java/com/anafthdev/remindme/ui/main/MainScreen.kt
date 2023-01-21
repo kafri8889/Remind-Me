@@ -1,16 +1,20 @@
 package com.anafthdev.remindme.ui.main
 
 import androidx.activity.compose.BackHandler
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.LazyListState
-import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.foundation.lazy.*
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.rounded.Add
+import androidx.compose.material3.FilledTonalButton
+import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.window.layout.DisplayFeature
 import com.anafthdev.remindme.data.RemindMeScreenRoute
 import com.anafthdev.remindme.data.RemindMeTopLevelDestination
@@ -19,8 +23,10 @@ import com.anafthdev.remindme.data.model.Reminder
 import com.anafthdev.remindme.extension.toast
 import com.anafthdev.remindme.ui.remind_me.RemindMeUiState
 import com.anafthdev.remindme.ui.reminder_detail.ReminderDetailScreen
+import com.anafthdev.remindme.ui.reminder_detail.ReminderDetailViewModel
 import com.anafthdev.remindme.uicomponent.RemindMeTopAppBar
 import com.anafthdev.remindme.uicomponent.ReminderItem
+import com.anafthdev.remindme.uicomponent.ReminderMessageItem
 import com.anafthdev.remindme.utils.RemindMeContentType
 import com.google.accompanist.adaptive.HorizontalTwoPaneStrategy
 import com.google.accompanist.adaptive.TwoPane
@@ -172,6 +178,7 @@ fun RemindMeReminderList(
 	}
 }
 
+@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun RemindMeReminderDetail(
 	reminder: Reminder?,
@@ -182,16 +189,21 @@ fun RemindMeReminderDetail(
 	
 	val context = LocalContext.current
 	
+	val viewModel = hiltViewModel<ReminderDetailViewModel>()
+	
 	LaunchedEffect(reminder) {
 		if (reminder == null) {
 			"No reminder selected".toast(context)
 			onBackPressed()
+		} else {
+			viewModel.updateWithReminder(reminder)
 		}
 	}
 	
 	LazyColumn(
 		modifier = modifier
 			.fillMaxSize()
+			.systemBarsPadding()
 	) {
 		item {
 			RemindMeTopAppBar(
@@ -202,7 +214,44 @@ fun RemindMeReminderDetail(
 		}
 		
 		item {
-			ReminderDetailScreen()
+			ReminderDetailScreen(
+				viewModel = viewModel
+			)
+		}
+		
+		itemsIndexed(viewModel.messages) { i, text ->
+			ReminderMessageItem(
+				message = text,
+				onDelete = {
+					viewModel.messages.apply {
+						removeAt(i)
+					}
+				},
+				modifier = Modifier
+					.padding(
+						horizontal = 8.dp,
+						vertical = 4.dp
+					)
+					.fillMaxWidth()
+					.animateItemPlacement()
+			)
+		}
+		
+		item {
+			FilledTonalButton(
+				shape = MaterialTheme.shapes.medium,
+				onClick = {
+				
+				},
+				modifier = Modifier
+					.fillMaxWidth()
+					.padding(8.dp)
+			) {
+				Icon(
+					imageVector = Icons.Rounded.Add,
+					contentDescription = null
+				)
+			}
 		}
 		
 		item {
