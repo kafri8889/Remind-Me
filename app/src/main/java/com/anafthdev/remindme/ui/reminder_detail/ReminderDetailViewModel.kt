@@ -7,6 +7,7 @@ import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import com.anafthdev.remindme.data.DayOfWeek
 import com.anafthdev.remindme.data.HourClockType
+import com.anafthdev.remindme.data.ReminderMessageType
 import com.anafthdev.remindme.data.TimeType
 import com.anafthdev.remindme.data.model.Reminder
 import com.anafthdev.remindme.extension.convert12HourTo24Hour
@@ -40,7 +41,7 @@ class ReminderDetailViewModel @Inject constructor(
 	var reminderName by mutableStateOf("")
 		private set
 	
-	var messages = mutableStateListOf<String>()
+	var messages = mutableStateListOf<Pair<String, ReminderMessageType>>()
 		private set
 	
 	var repeatOnDays = mutableStateListOf<DayOfWeek>()
@@ -51,7 +52,7 @@ class ReminderDetailViewModel @Inject constructor(
 		
 		messages.apply {
 			clear()
-			addAll(reminder.messages)
+			addAll(reminder.messages.map { it to ReminderMessageType.Fixed })
 		}
 	}
 	

@@ -13,12 +13,14 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.window.layout.DisplayFeature
 import com.anafthdev.remindme.data.RemindMeScreenRoute
 import com.anafthdev.remindme.data.RemindMeTopLevelDestination
 import com.anafthdev.remindme.data.RemindMeTopLevelDestinations
+import com.anafthdev.remindme.data.ReminderMessageType
 import com.anafthdev.remindme.data.model.Reminder
 import com.anafthdev.remindme.extension.toast
 import com.anafthdev.remindme.ui.remind_me.RemindMeUiState
@@ -178,7 +180,7 @@ fun RemindMeReminderList(
 	}
 }
 
-@OptIn(ExperimentalFoundationApi::class)
+@OptIn(ExperimentalFoundationApi::class, ExperimentalLayoutApi::class)
 @Composable
 fun RemindMeReminderDetail(
 	reminder: Reminder?,
@@ -188,6 +190,9 @@ fun RemindMeReminderDetail(
 ) {
 	
 	val context = LocalContext.current
+	val focusManager = LocalFocusManager.current
+	
+	val isKeyboardShowed = WindowInsets.isImeVisible
 	
 	val viewModel = hiltViewModel<ReminderDetailViewModel>()
 	
@@ -197,6 +202,18 @@ fun RemindMeReminderDetail(
 			onBackPressed()
 		} else {
 			viewModel.updateWithReminder(reminder)
+		}
+	}
+	
+	LaunchedEffect(isKeyboardShowed) {
+		if (!isKeyboardShowed) {
+			focusManager.clearFocus()
+			
+			viewModel.messages.apply {
+				removeIf { (text, type) ->
+					type == ReminderMessageType.Add || text.isBlank()
+				}
+			}
 		}
 	}
 	
@@ -219,29 +236,48 @@ fun RemindMeReminderDetail(
 			)
 		}
 		
-		itemsIndexed(viewModel.messages) { i, text ->
-			ReminderMessageItem(
-				message = text,
-				onDelete = {
-					viewModel.messages.apply {
-						removeAt(i)
-					}
-				},
-				modifier = Modifier
-					.padding(
-						horizontal = 8.dp,
-						vertical = 4.dp
-					)
-					.fillMaxWidth()
-					.animateItemPlacement()
-			)
+		itemsIndexed(viewModel.messages) { i, (text, type) ->
+			val reminderMessageModifier = Modifier
+				.padding(
+					horizontal = 8.dp,
+					vertical = 4.dp
+				)
+				.fillMaxWidth()
+				.animateItemPlacement()
+			
+			if (type == ReminderMessageType.Fixed) {
+				ReminderMessageItem(
+					message = text,
+					onDelete = {
+						viewModel.messages.apply {
+							removeAt(i)
+						}
+					},
+					modifier = reminderMessageModifier
+				)
+			} else {
+				ReminderMessageItem(
+					onSave = { message ->
+						viewModel.messages.apply {
+							removeIf { (text, type) ->
+								type == ReminderMessageType.Add || text.isBlank()
+							}
+							
+							add(message to ReminderMessageType.Fixed)
+						}
+					},
+					modifier = reminderMessageModifier
+				)
+			}
 		}
 		
 		item {
 			FilledTonalButton(
 				shape = MaterialTheme.shapes.medium,
 				onClick = {
-				
+					viewModel.messages.apply {
+						add("" to ReminderMessageType.Add)
+					}
 				},
 				modifier = Modifier
 					.fillMaxWidth()
