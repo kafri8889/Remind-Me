@@ -8,6 +8,7 @@ import androidx.lifecycle.ViewModel
 import com.anafthdev.remindme.data.DayOfWeek
 import com.anafthdev.remindme.data.HourClockType
 import com.anafthdev.remindme.data.TimeType
+import com.anafthdev.remindme.data.model.Reminder
 import com.anafthdev.remindme.extension.convert12HourTo24Hour
 import com.anafthdev.remindme.extension.convert24HourTo12Hour
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -39,8 +40,20 @@ class ReminderDetailViewModel @Inject constructor(
 	var reminderName by mutableStateOf("")
 		private set
 	
+	var messages = mutableStateListOf<String>()
+		private set
+	
 	var repeatOnDays = mutableStateListOf<DayOfWeek>()
 		private set
+	
+	fun updateWithReminder(reminder: Reminder) {
+		updateReminderName(reminder.name)
+		
+		messages.apply {
+			clear()
+			addAll(reminder.messages)
+		}
+	}
 	
 	fun updateClockPosition(pos: Int) {
 		clockPositionValue = pos
