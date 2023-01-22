@@ -21,24 +21,31 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.lifecycleScope
 import com.anafthdev.remindme.common.*
 import com.anafthdev.remindme.data.local.LocalRemindersDataProvider
+import com.anafthdev.remindme.data.repository.ReminderRepository
 import com.anafthdev.remindme.theme.RemindMeTheme
 import com.anafthdev.remindme.ui.remind_me.RemindMeApp
 import com.anafthdev.remindme.ui.remind_me.RemindMeUiState
 import com.anafthdev.remindme.ui.remind_me.RemindMeViewModel
+import com.anafthdev.remindme.ui.remind_me.RemindMeViewModelFactory
 import com.google.accompanist.adaptive.calculateDisplayFeatures
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
 
 @AndroidEntryPoint
 class MainActivity : FragmentActivity() {
 	
+	@Inject lateinit var reminderRepository: ReminderRepository
+	
 	private lateinit var pickerManager: PickerManager
 	
-	private val remindMeViewModel: RemindMeViewModel by viewModels()
+	private val remindMeViewModel: RemindMeViewModel by viewModels(
+		factoryProducer = { RemindMeViewModelFactory(reminderRepository) }
+	)
 	
 	private val _pickerData = MutableStateFlow(PickerData())
 	private val pickerData: StateFlow<PickerData> = _pickerData
