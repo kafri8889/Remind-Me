@@ -19,6 +19,14 @@ class UserPreferencesRepository @Inject constructor(
 		}
 	}
 	
+	suspend fun setAutoSave(auto: Boolean) {
+		userPreferencesDataStore.updateData { currentPreferences ->
+			currentPreferences.copy(
+				autoSave = auto
+			)
+		}
+	}
+	
 	val getUserPreferences: Flow<UserPreferences> = userPreferencesDataStore.data
 	
 	suspend fun getInitialPreferences(): UserPreferences = userPreferencesDataStore.data.first()
