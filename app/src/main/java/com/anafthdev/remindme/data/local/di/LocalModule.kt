@@ -2,7 +2,6 @@ package com.anafthdev.remindme.data.local.di
 
 import android.content.Context
 import com.anafthdev.remindme.data.local.AppDatabase
-import com.anafthdev.remindme.data.local.dao.ReminderDao
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -19,11 +18,5 @@ class LocalModule {
 	fun provideAppDatabase(
 		@ApplicationContext context: Context
 	): AppDatabase = AppDatabase.getInstance(context)
-	
-	@Provides
-	@Singleton
-	fun provideReminderDao(
-		appDatabase: AppDatabase
-	): ReminderDao = appDatabase.reminderDao()
 	
 }
