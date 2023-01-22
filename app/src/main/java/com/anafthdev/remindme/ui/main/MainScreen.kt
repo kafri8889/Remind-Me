@@ -21,7 +21,7 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.window.layout.DisplayFeature
 import com.anafthdev.remindme.R
-import com.anafthdev.remindme.data.RemindMeScreenRoute
+import com.anafthdev.remindme.data.RemindMeRoute
 import com.anafthdev.remindme.data.RemindMeTopLevelDestination
 import com.anafthdev.remindme.data.RemindMeTopLevelDestinations
 import com.anafthdev.remindme.data.ReminderMessageType
@@ -152,7 +152,7 @@ fun RemindMeReminderList(
 	) {
 		item {
 			RemindMeTopAppBar(
-				route = RemindMeScreenRoute.REMINDER_LIST,
+				route = RemindMeRoute.REMINDER_LIST,
 				contentType = contentType,
 				onNavigationIconClicked = {},
 				onSettingClicked = {
@@ -251,7 +251,7 @@ fun RemindMeReminderDetail(
 		) {
 			item {
 				RemindMeTopAppBar(
-					route = RemindMeScreenRoute.REMINDER_DETAIL,
+					route = RemindMeRoute.REMINDER_DETAIL,
 					contentType = contentType,
 					onNavigationIconClicked = onBackPressed
 				)

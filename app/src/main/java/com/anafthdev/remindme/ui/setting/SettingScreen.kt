@@ -11,11 +11,16 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.anafthdev.remindme.R
+import com.anafthdev.remindme.data.RemindMeRoute
+import com.anafthdev.remindme.uicomponent.RemindMeTopAppBar
 import com.anafthdev.remindme.uicomponent.SwitchPreference
+import com.anafthdev.remindme.utils.RemindMeContentType
 
 @Composable
 fun SettingScreen(
-	viewModel: SettingViewModel
+	viewModel: SettingViewModel,
+	contentType: RemindMeContentType,
+	onBackPressed: () -> Unit = {}
 ) {
 	
 	LazyColumn(
@@ -23,6 +28,14 @@ fun SettingScreen(
 			.fillMaxSize()
 			.systemBarsPadding()
 	) {
+		item {
+			RemindMeTopAppBar(
+				route = RemindMeRoute.SETTING,
+				contentType = contentType,
+				onNavigationIconClicked = onBackPressed
+			)
+		}
+		
 		item {
 			SwitchPreference(
 				isChecked = viewModel.is24Hour,

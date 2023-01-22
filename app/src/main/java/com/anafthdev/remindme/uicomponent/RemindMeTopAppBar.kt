@@ -10,7 +10,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import com.anafthdev.remindme.R
-import com.anafthdev.remindme.data.RemindMeScreenRoute
+import com.anafthdev.remindme.data.RemindMeRoute
 import com.anafthdev.remindme.data.RemindMeTopLevelDestination
 import com.anafthdev.remindme.data.TOP_LEVEL_DESTINATIONS
 import com.anafthdev.remindme.utils.RemindMeContentType
@@ -33,7 +33,9 @@ fun RemindMeTopAppBar(
 		),
 		title = {},
 		navigationIcon = {
-			if (route == RemindMeScreenRoute.REMINDER_DETAIL && contentType == RemindMeContentType.SINGLE_PANE) {
+			val supportedRoute = route == RemindMeRoute.REMINDER_DETAIL || route == RemindMeRoute.SETTING
+			
+			if (supportedRoute && contentType == RemindMeContentType.SINGLE_PANE) {
 				IconButton(onClick = onNavigationIconClicked) {
 					Icon(
 						imageVector = Icons.Rounded.ArrowBack,
@@ -44,28 +46,33 @@ fun RemindMeTopAppBar(
 		},
 		actions = {
 			if (contentType == RemindMeContentType.SINGLE_PANE) {
-				if (route == RemindMeScreenRoute.REMINDER_DETAIL) {
-					IconButton(onClick = onTrashClicked) {
-						Icon(
-							painter = painterResource(id = R.drawable.ic_trash),
-							contentDescription = null
-						)
+				when (route) {
+					RemindMeRoute.REMINDER_DETAIL -> {
+						IconButton(onClick = onTrashClicked) {
+							Icon(
+								painter = painterResource(id = R.drawable.ic_trash),
+								contentDescription = null
+							)
+						}
 					}
-				} else {
-					IconButton(onClick = onSettingClicked) {
-						Icon(
-							painter = painterResource(id = R.drawable.ic_setting),
-							contentDescription = null
-						)
+					RemindMeRoute.REMINDER_LIST -> {
+						IconButton(onClick = onSettingClicked) {
+							Icon(
+								painter = painterResource(id = R.drawable.ic_setting),
+								contentDescription = null
+							)
+						}
 					}
 				}
 			} else {
-				if (route == RemindMeScreenRoute.REMINDER_DETAIL) {
-					IconButton(onClick = onTrashClicked) {
-						Icon(
-							painter = painterResource(id = R.drawable.ic_trash),
-							contentDescription = null
-						)
+				when (route) {
+					RemindMeRoute.REMINDER_DETAIL -> {
+						IconButton(onClick = onTrashClicked) {
+							Icon(
+								painter = painterResource(id = R.drawable.ic_trash),
+								contentDescription = null
+							)
+						}
 					}
 				}
 			}

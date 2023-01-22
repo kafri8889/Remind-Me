@@ -24,12 +24,8 @@ object RemindMeRoute {
 	const val HOME = "Home"
 	const val SETTING = "Setting"
 	const val NEW_REMINDER = "New Reminder"
-}
-
-object RemindMeScreenRoute {
 	const val REMINDER_LIST = "reminder_list"
 	const val REMINDER_DETAIL = "reminder_detail"
-	const val NEW_REMINDER = "new_reminder"
 }
 
 data class RemindMeTopLevelDestination(

@@ -307,7 +307,11 @@ private fun RemindMeNavHost(
 		composable(RemindMeRoute.SETTING) { backEntry ->
 			val viewModel = hiltViewModel<SettingViewModel>(backEntry)
 			
-			SettingScreen(viewModel = viewModel)
+			SettingScreen(
+				viewModel = viewModel,
+				contentType = contentType,
+				onBackPressed = navController::popBackStack
+			)
 		}
 		
 		bottomSheet(RemindMeRoute.NEW_REMINDER) { backEntry ->
@@ -315,9 +319,7 @@ private fun RemindMeNavHost(
 			
 			NewReminderScreen(
 				viewModel = viewModel,
-				onBack = {
-					navController.popBackStack()
-				}
+				onBack = navController::popBackStack
 			)
 		}
 	}
