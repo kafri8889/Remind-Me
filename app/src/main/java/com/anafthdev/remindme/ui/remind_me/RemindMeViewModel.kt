@@ -7,6 +7,7 @@ import com.anafthdev.remindme.data.repository.ReminderRepository
 import com.anafthdev.remindme.extension.toReminderDb
 import com.anafthdev.remindme.utils.RemindMeContentType
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.catch
@@ -41,7 +42,7 @@ class RemindMeViewModel @Inject constructor(
 	}
 	
 	fun updateReminder(reminder: Reminder) {
-		viewModelScope.launch {
+		viewModelScope.launch(Dispatchers.IO) {
 			reminderRepository.updateReminder(reminder.toReminderDb())
 		}
 	}
