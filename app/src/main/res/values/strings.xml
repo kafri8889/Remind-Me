@@ -21,4 +21,8 @@
     <string name="save">Save</string>
     <string name="cancel">Cancel</string>
     <string name="no_reminder_selected">No reminder selected</string>
+    <string name="setting_use_24_hour_format_summary">Use the 24-hour or 12-hour time format</string>
+    <string name="setting_use_24_hour_format">Use 24-hour format</string>
+    <string name="setting_use_auto_save">Auto save</string>
+    <string name="setting_use_auto_save_summary">Save reminders instantly when there is a change</string>
 </resources>
