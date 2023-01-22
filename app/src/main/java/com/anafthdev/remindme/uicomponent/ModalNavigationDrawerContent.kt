@@ -32,7 +32,8 @@ fun ModalNavigationDrawerContent(
 	selectedDestination: String,
 	navigationContentPosition: RemindMeNavigationContentPosition,
 	navigateToTopLevelDestination: (RemindMeTopLevelDestination) -> Unit,
-	onDrawerClicked: () -> Unit = {}
+	onDrawerClicked: () -> Unit = {},
+	onFABClicked: () -> Unit = {},
 ) {
 	ModalDrawerSheet {
 		// TODO remove custom nav drawer content positioning when NavDrawer component supports it. ticket : b/232495216
@@ -58,6 +59,7 @@ fun ModalNavigationDrawerContent(
 							style = MaterialTheme.typography.titleMedium,
 							color = MaterialTheme.colorScheme.primary
 						)
+						
 						IconButton(onClick = onDrawerClicked) {
 							Icon(
 								imageVector = Icons.Default.MenuOpen,
@@ -67,7 +69,7 @@ fun ModalNavigationDrawerContent(
 					}
 					
 					ExtendedFloatingActionButton(
-						onClick = { /*TODO*/ },
+						onClick = onFABClicked,
 						modifier = Modifier
 							.fillMaxWidth()
 							.padding(top = 8.dp, bottom = 40.dp),
@@ -114,7 +116,10 @@ fun ModalNavigationDrawerContent(
 							colors = NavigationDrawerItemDefaults.colors(
 								unselectedContainerColor = Color.Transparent
 							),
-							onClick = { navigateToTopLevelDestination(replyDestination) }
+							onClick = {
+								navigateToTopLevelDestination(replyDestination)
+								onDrawerClicked()
+							}
 						)
 					}
 				}
