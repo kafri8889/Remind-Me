@@ -23,17 +23,18 @@ import com.anafthdev.remindme.R
 object RemindMeRoute {
 	const val HOME = "Home"
 	const val SETTING = "Setting"
+	const val NEW_REMINDER = "New Reminder"
 }
 
 object RemindMeScreenRoute {
 	const val REMINDER_LIST = "reminder_list"
 	const val REMINDER_DETAIL = "reminder_detail"
+	const val NEW_REMINDER = "new_reminder"
 }
 
 data class RemindMeTopLevelDestination(
 	val route: String,
 	val selectedIcon: Int,
-//	val unselectedIcon: ImageVector,
 	val iconTextId: Int
 )
 
@@ -61,15 +62,19 @@ object RemindMeTopLevelDestinations {
 	val home = RemindMeTopLevelDestination(
 		route = RemindMeRoute.HOME,
 		selectedIcon = R.drawable.ic_dashboard,
-//		unselectedIcon = Icons.Default.Inbox,
 		iconTextId = R.string.tab_home
 	)
 	
 	val setting = RemindMeTopLevelDestination(
 		route = RemindMeRoute.SETTING,
 		selectedIcon = R.drawable.ic_setting,
-//		unselectedIcon = Icons.Default.Article,
 		iconTextId = R.string.tab_setting
+	)
+	
+	val newReminder = RemindMeTopLevelDestination(
+		route = RemindMeRoute.NEW_REMINDER,
+		selectedIcon = -1,
+		iconTextId = -1
 	)
 	
 }
