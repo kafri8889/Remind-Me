@@ -15,6 +15,7 @@
         <activity
             android:name=".runtime.MainActivity"
             android:exported="true"
+            android:windowSoftInputMode="adjustResize"
             android:theme="@style/Theme.RemindMe">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
