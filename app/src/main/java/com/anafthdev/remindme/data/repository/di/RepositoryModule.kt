@@ -2,6 +2,7 @@ package com.anafthdev.remindme.data.repository.di
 
 import androidx.datastore.core.DataStore
 import com.anafthdev.remindme.UserPreferences
+import com.anafthdev.remindme.data.local.AppDatabase
 import com.anafthdev.remindme.data.repository.ReminderRepository
 import com.anafthdev.remindme.data.repository.UserPreferencesRepository
 import dagger.Module
@@ -16,7 +17,11 @@ class RepositoryModule {
 	
 	@Provides
 	@Singleton
-	fun provideReminderRepository(): ReminderRepository = ReminderRepository()
+	fun provideReminderRepository(
+		appDatabase: AppDatabase
+	): ReminderRepository = ReminderRepository(
+		reminderDao = appDatabase.reminderDao()
+	)
 	
 	@Provides
 	@Singleton
