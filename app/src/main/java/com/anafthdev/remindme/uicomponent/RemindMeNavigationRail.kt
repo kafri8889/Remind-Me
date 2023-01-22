@@ -25,7 +25,7 @@ fun RemindMeNavigationRail(
 	navigationContentPosition: RemindMeNavigationContentPosition,
 	navigateToTopLevelDestination: (RemindMeTopLevelDestination) -> Unit,
 	onDrawerClicked: () -> Unit = {},
-	onAddClicked: () -> Unit = {}
+	onFABClicked: () -> Unit = {}
 ) {
 	NavigationRail(
 		modifier = Modifier.fillMaxHeight(),
@@ -51,7 +51,7 @@ fun RemindMeNavigationRail(
 						}
 					)
 					FloatingActionButton(
-						onClick = onAddClicked,
+						onClick = onFABClicked,
 						containerColor = MaterialTheme.colorScheme.tertiaryContainer,
 						contentColor = MaterialTheme.colorScheme.onTertiaryContainer,
 						modifier = Modifier
