@@ -31,6 +31,7 @@ fun PermanentNavigationDrawerContent(
 	selectedDestination: String,
 	navigationContentPosition: RemindMeNavigationContentPosition,
 	navigateToTopLevelDestination: (RemindMeTopLevelDestination) -> Unit,
+	onFABClicked: () -> Unit = {},
 ) {
 	PermanentDrawerSheet(
 		modifier = Modifier
@@ -55,7 +56,7 @@ fun PermanentNavigationDrawerContent(
 						color = MaterialTheme.colorScheme.primary
 					)
 					ExtendedFloatingActionButton(
-						onClick = { /*TODO*/ },
+						onClick = onFABClicked,
 						modifier = Modifier
 							.fillMaxWidth()
 							.padding(top = 8.dp, bottom = 40.dp),
