@@ -67,6 +67,7 @@ fun MainScreen(
 			),
 			first = {
 				RemindMeReminderList(
+					is24Hour = remindMeUiState.userPreferences.is24Hour,
 					reminders = remindMeUiState.reminders,
 					contentType = contentType,
 					reminderLazyListState = reminderLazyListState,
@@ -121,6 +122,7 @@ fun RemindMeSinglePaneContent(
 		}
 	} else {
 		RemindMeReminderList(
+			is24Hour = remindMeUiState.userPreferences.is24Hour,
 			reminders = remindMeUiState.reminders,
 			contentType = RemindMeContentType.SINGLE_PANE,
 			reminderLazyListState = reminderLazyListState,
@@ -134,6 +136,7 @@ fun RemindMeSinglePaneContent(
 
 @Composable
 fun RemindMeReminderList(
+	is24Hour: Boolean,
 	reminders: List<Reminder>,
 	contentType: RemindMeContentType,
 	reminderLazyListState: LazyListState,
@@ -164,7 +167,7 @@ fun RemindMeReminderList(
 		) { reminder ->
 			ReminderItem(
 				reminder = reminder,
-				is24Hour = true, // TODO: From datastore
+				is24Hour = is24Hour,
 				onClick = {
 					navigateToReminder(reminder.id, contentType)
 				},

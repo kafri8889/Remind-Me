@@ -4,6 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.anafthdev.remindme.data.model.Reminder
 import com.anafthdev.remindme.data.repository.ReminderRepository
+import com.anafthdev.remindme.data.repository.UserPreferencesRepository
 import com.anafthdev.remindme.extension.toReminderDb
 import com.anafthdev.remindme.utils.RemindMeContentType
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -16,7 +17,8 @@ import javax.inject.Inject
 
 @HiltViewModel
 class RemindMeViewModel @Inject constructor(
-	private val reminderRepository: ReminderRepository
+	private val reminderRepository: ReminderRepository,
+	private val userPreferencesRepository: UserPreferencesRepository
 ): ViewModel() {
 	
 	// UI state exposed to the UI
@@ -25,17 +27,32 @@ class RemindMeViewModel @Inject constructor(
 	
 	init {
 		observeReminders()
+		observeUserPreference()
 	}
 	
 	private fun observeReminders() {
 		viewModelScope.launch {
 			reminderRepository.getAllReminders()
 				.catch { ex ->
-					_uiState.value = RemindMeUiState(error = ex.message)
+					_uiState.value = _uiState.value.copy(error = ex.message)
 				}
 				.collect { reminders ->
-					_uiState.value = RemindMeUiState(
+					_uiState.value = _uiState.value.copy(
 						reminders = reminders
+					)
+				}
+		}
+	}
+	
+	private fun observeUserPreference() {
+		viewModelScope.launch {
+			userPreferencesRepository.getUserPreferences
+				.catch { ex ->
+					_uiState.value = _uiState.value.copy(error = ex.message)
+				}
+				.collect { preferences ->
+					_uiState.value = _uiState.value.copy(
+						userPreferences = preferences
 					)
 				}
 		}

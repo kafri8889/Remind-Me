@@ -22,6 +22,7 @@ import androidx.lifecycle.lifecycleScope
 import com.anafthdev.remindme.common.*
 import com.anafthdev.remindme.data.local.LocalRemindersDataProvider
 import com.anafthdev.remindme.data.repository.ReminderRepository
+import com.anafthdev.remindme.data.repository.UserPreferencesRepository
 import com.anafthdev.remindme.theme.RemindMeTheme
 import com.anafthdev.remindme.ui.remind_me.RemindMeApp
 import com.anafthdev.remindme.ui.remind_me.RemindMeUiState
@@ -40,11 +41,12 @@ import javax.inject.Inject
 class MainActivity : FragmentActivity() {
 	
 	@Inject lateinit var reminderRepository: ReminderRepository
+	@Inject lateinit var userPreferencesRepository: UserPreferencesRepository
 	
 	private lateinit var pickerManager: PickerManager
 	
 	private val remindMeViewModel: RemindMeViewModel by viewModels(
-		factoryProducer = { RemindMeViewModelFactory(reminderRepository) }
+		factoryProducer = { RemindMeViewModelFactory(reminderRepository, userPreferencesRepository) }
 	)
 	
 	private val _pickerData = MutableStateFlow(PickerData())
