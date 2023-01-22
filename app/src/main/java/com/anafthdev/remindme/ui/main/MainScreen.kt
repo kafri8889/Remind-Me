@@ -9,20 +9,23 @@ import androidx.compose.material.icons.rounded.Add
 import androidx.compose.material3.FilledTonalButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.window.layout.DisplayFeature
+import com.anafthdev.remindme.R
 import com.anafthdev.remindme.data.RemindMeScreenRoute
 import com.anafthdev.remindme.data.RemindMeTopLevelDestination
 import com.anafthdev.remindme.data.RemindMeTopLevelDestinations
 import com.anafthdev.remindme.data.ReminderMessageType
 import com.anafthdev.remindme.data.model.Reminder
-import com.anafthdev.remindme.extension.toast
 import com.anafthdev.remindme.ui.remind_me.RemindMeUiState
 import com.anafthdev.remindme.ui.reminder_detail.ReminderDetailScreen
 import com.anafthdev.remindme.ui.reminder_detail.ReminderDetailViewModel
@@ -197,10 +200,14 @@ fun RemindMeReminderDetail(
 	val viewModel = hiltViewModel<ReminderDetailViewModel>()
 	
 	LaunchedEffect(reminder) {
-		if (reminder == null) {
-			"No reminder selected".toast(context)
-			onBackPressed()
-		} else {
+//		if (reminder == null) {
+//			"No reminder selected".toast(context)
+//			onBackPressed()
+//		} else {
+//			viewModel.updateWithReminder(reminder)
+//		}
+		
+		if (reminder != null) {
 			viewModel.updateWithReminder(reminder)
 		}
 	}
@@ -217,81 +224,99 @@ fun RemindMeReminderDetail(
 		}
 	}
 	
-	LazyColumn(
-		modifier = modifier
-			.fillMaxSize()
-			.systemBarsPadding()
-	) {
-		item {
-			RemindMeTopAppBar(
-				route = RemindMeScreenRoute.REMINDER_DETAIL,
-				contentType = contentType,
-				onNavigationIconClicked = onBackPressed
+	BackHandler(enabled = reminder != null) {
+		onBackPressed()
+	}
+	
+	if (reminder == null) {
+		Box(
+			contentAlignment = Alignment.Center,
+			modifier = modifier
+				.fillMaxSize()
+				.systemBarsPadding()
+		) {
+			Text(
+				text = stringResource(id = R.string.no_reminder_selected),
+				style = MaterialTheme.typography.titleMedium
 			)
 		}
-		
-		item {
-			ReminderDetailScreen(
-				viewModel = viewModel
-			)
-		}
-		
-		itemsIndexed(viewModel.messages) { i, (text, type) ->
-			val reminderMessageModifier = Modifier
-				.padding(
-					horizontal = 8.dp,
-					vertical = 4.dp
+	} else {
+		LazyColumn(
+			modifier = modifier
+				.fillMaxSize()
+				.systemBarsPadding()
+		) {
+			item {
+				RemindMeTopAppBar(
+					route = RemindMeScreenRoute.REMINDER_DETAIL,
+					contentType = contentType,
+					onNavigationIconClicked = onBackPressed
 				)
-				.fillMaxWidth()
-				.animateItemPlacement()
+			}
 			
-			if (type == ReminderMessageType.Fixed) {
-				ReminderMessageItem(
-					message = text,
-					onDelete = {
-						viewModel.messages.apply {
-							removeAt(i)
-						}
-					},
-					modifier = reminderMessageModifier
-				)
-			} else {
-				ReminderMessageItem(
-					onSave = { message ->
-						viewModel.messages.apply {
-							removeIf { (text, type) ->
-								type == ReminderMessageType.Add || text.isBlank()
-							}
-							
-							add(message to ReminderMessageType.Fixed)
-						}
-					},
-					modifier = reminderMessageModifier
+			item {
+				ReminderDetailScreen(
+					viewModel = viewModel
 				)
 			}
-		}
-		
-		item {
-			FilledTonalButton(
-				shape = MaterialTheme.shapes.medium,
-				onClick = {
-					viewModel.messages.apply {
-						add("" to ReminderMessageType.Add)
-					}
-				},
-				modifier = Modifier
+			
+			itemsIndexed(viewModel.messages) { i, (text, type) ->
+				val reminderMessageModifier = Modifier
+					.padding(
+						horizontal = 8.dp,
+						vertical = 4.dp
+					)
 					.fillMaxWidth()
-					.padding(8.dp)
-			) {
-				Icon(
-					imageVector = Icons.Rounded.Add,
-					contentDescription = null
-				)
+					.animateItemPlacement()
+				
+				if (type == ReminderMessageType.Fixed) {
+					ReminderMessageItem(
+						message = text,
+						onDelete = {
+							viewModel.messages.apply {
+								removeAt(i)
+							}
+						},
+						modifier = reminderMessageModifier
+					)
+				} else {
+					ReminderMessageItem(
+						onSave = { message ->
+							viewModel.messages.apply {
+								removeIf { (text, type) ->
+									type == ReminderMessageType.Add || text.isBlank()
+								}
+								
+								add(message to ReminderMessageType.Fixed)
+							}
+						},
+						modifier = reminderMessageModifier
+					)
+				}
 			}
-		}
-		
-		item {
-			Spacer(modifier = Modifier.height(24.dp))
+			
+			item {
+				FilledTonalButton(
+					shape = MaterialTheme.shapes.medium,
+					onClick = {
+						viewModel.messages.apply {
+							add("" to ReminderMessageType.Add)
+						}
+					},
+					modifier = Modifier
+						.fillMaxWidth()
+						.padding(8.dp)
+				) {
+					Icon(
+						imageVector = Icons.Rounded.Add,
+						contentDescription = null
+					)
+				}
+			}
+			
+			item {
+				Spacer(modifier = Modifier.height(24.dp))
+			}
 		}
 	}
 }
