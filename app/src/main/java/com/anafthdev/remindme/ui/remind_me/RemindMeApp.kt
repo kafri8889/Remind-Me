@@ -27,6 +27,8 @@ import com.anafthdev.remindme.data.model.Reminder
 import com.anafthdev.remindme.ui.main.MainScreen
 import com.anafthdev.remindme.ui.new_reminder.NewReminderScreen
 import com.anafthdev.remindme.ui.new_reminder.NewReminderViewModel
+import com.anafthdev.remindme.ui.setting.SettingScreen
+import com.anafthdev.remindme.ui.setting.SettingViewModel
 import com.anafthdev.remindme.uicomponent.ModalNavigationDrawerContent
 import com.anafthdev.remindme.uicomponent.PermanentNavigationDrawerContent
 import com.anafthdev.remindme.uicomponent.RemindMeNavigationRail
@@ -302,8 +304,10 @@ private fun RemindMeNavHost(
 			)
 		}
 		
-		composable(RemindMeRoute.SETTING) {
-		
+		composable(RemindMeRoute.SETTING) { backEntry ->
+			val viewModel = hiltViewModel<SettingViewModel>(backEntry)
+			
+			SettingScreen(viewModel = viewModel)
 		}
 		
 		bottomSheet(RemindMeRoute.NEW_REMINDER) { backEntry ->
