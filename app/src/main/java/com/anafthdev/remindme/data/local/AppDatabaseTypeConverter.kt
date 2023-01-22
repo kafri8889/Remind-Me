@@ -7,14 +7,13 @@ import com.google.gson.Gson
 object AppDatabaseTypeConverter {
 	
 	@TypeConverter
-	fun dayOfWeekToOrdinal(dayOfWeek: DayOfWeek): Int = dayOfWeek.ordinal
+	fun listDayOfWeekToJSON(dayOfWeeks: List<DayOfWeek>): String = Gson().toJson(dayOfWeeks)
 	
 	@TypeConverter
-	fun dayOfWeekFromOrdinal(ordinal: Int): DayOfWeek = DayOfWeek.values()[ordinal]
+	fun listDayOfWeekFromJSON(json: String): List<DayOfWeek> = Gson().fromJson(json, Array<DayOfWeek>::class.java).toList()
 	
 	@TypeConverter
 	fun listStringToJSON(list: List<String>): String = Gson().toJson(list)
-	
 	
 	@TypeConverter
 	fun listStringFromJSON(json: String): List<String> = Gson().fromJson(json, Array<String>::class.java).toList()
