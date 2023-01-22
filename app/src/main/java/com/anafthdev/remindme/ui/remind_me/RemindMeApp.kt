@@ -152,6 +152,9 @@ private fun RemindMeNavigationWrapper(
 					selectedDestination = selectedDestination,
 					navigationContentPosition = navigationContentPosition,
 					navigateToTopLevelDestination = navigationActions::navigateTo,
+					onFABClicked = {
+						navigationActions.navigateTo(RemindMeTopLevelDestinations.newReminder)
+					}
 				)
 			}) {
 				RemindMeAppContent(
@@ -183,6 +186,10 @@ private fun RemindMeNavigationWrapper(
 						},
 						onFABClicked = {
 							navigationActions.navigateTo(RemindMeTopLevelDestinations.newReminder)
+							
+							scope.launch {
+								drawerState.close()
+							}
 						}
 					)
 				}
