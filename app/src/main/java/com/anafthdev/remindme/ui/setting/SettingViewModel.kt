@@ -23,7 +23,7 @@ class SettingViewModel @Inject constructor(
 		private set
 	
 	init {
-		viewModelScope.launch(Dispatchers.IO) {
+		viewModelScope.launch {
 			userPreferencesRepository.getUserPreferences.collect { preferences ->
 				is24Hour = preferences.is24Hour
 				autoSave = preferences.autoSave
