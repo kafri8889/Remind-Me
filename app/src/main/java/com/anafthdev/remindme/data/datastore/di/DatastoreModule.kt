@@ -1,4 +1,4 @@
-package com.anafthdev.remindme.data.datastore
+package com.anafthdev.remindme.data.datastore.di
 
 import android.content.Context
 import androidx.datastore.core.DataStore
@@ -6,6 +6,7 @@ import androidx.datastore.core.DataStoreFactory
 import androidx.datastore.dataStoreFile
 import com.anafthdev.remindme.UserPreferences
 import com.anafthdev.remindme.data.Constants
+import com.anafthdev.remindme.data.datastore.UserPreferencesSerializer
 import com.anafthdev.remindme.data.repository.UserPreferencesRepository
 import dagger.Module
 import dagger.Provides
