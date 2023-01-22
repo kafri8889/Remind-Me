@@ -11,6 +11,7 @@ import androidx.compose.material3.windowsizeclass.WindowSizeClass
 import androidx.compose.material3.windowsizeclass.WindowWidthSizeClass
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -21,12 +22,16 @@ import androidx.window.layout.FoldingFeature
 import com.anafthdev.remindme.data.RemindMeNavigationActions
 import com.anafthdev.remindme.data.RemindMeRoute
 import com.anafthdev.remindme.data.RemindMeTopLevelDestination
+import com.anafthdev.remindme.data.RemindMeTopLevelDestinations
 import com.anafthdev.remindme.data.model.Reminder
 import com.anafthdev.remindme.ui.main.MainScreen
+import com.anafthdev.remindme.ui.new_reminder.NewReminderScreen
+import com.anafthdev.remindme.ui.new_reminder.NewReminderViewModel
 import com.anafthdev.remindme.uicomponent.ModalNavigationDrawerContent
 import com.anafthdev.remindme.uicomponent.PermanentNavigationDrawerContent
 import com.anafthdev.remindme.uicomponent.RemindMeNavigationRail
 import com.anafthdev.remindme.utils.*
+import com.google.accompanist.navigation.material.*
 import kotlinx.coroutines.launch
 
 @Composable
@@ -111,7 +116,7 @@ fun RemindMeApp(
 	)
 }
 
-@OptIn(ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterialNavigationApi::class)
 @Composable
 private fun RemindMeNavigationWrapper(
 	contentType: RemindMeContentType,
@@ -125,7 +130,8 @@ private fun RemindMeNavigationWrapper(
 ) {
 	val scope = rememberCoroutineScope()
 	val drawerState = rememberDrawerState(DrawerValue.Closed)
-	val navController = rememberNavController()
+	val bottomSheetNavigator = rememberBottomSheetNavigator()
+	val navController = rememberNavController(bottomSheetNavigator)
 	
 	val navigationActions = remember(navController) {
 		RemindMeNavigationActions(navController)
@@ -134,63 +140,72 @@ private fun RemindMeNavigationWrapper(
 	val navBackStackEntry by navController.currentBackStackEntryAsState()
 	val selectedDestination = navBackStackEntry?.destination?.route ?: RemindMeRoute.HOME
 	
-	if (navigationType == RemindMeNavigationType.PERMANENT_NAVIGATION_DRAWER) {
-		// TODO check on custom width of PermanentNavigationDrawer: b/232495216
-		PermanentNavigationDrawer(drawerContent = {
-			PermanentNavigationDrawerContent(
-				selectedDestination = selectedDestination,
-				navigationContentPosition = navigationContentPosition,
-				navigateToTopLevelDestination = navigationActions::navigateTo,
-			)
-		}) {
-			RemindMeAppContent(
-				navController = navController,
-				contentType = contentType,
-				displayFeatures = displayFeatures,
-				remindMeUiState = remindMeUiState,
-				navigateToTopLevelDestination = navigationActions::navigateTo,
-				closeReminderScreen = closeReminderScreen,
-				navigateToReminder = navigateToReminder,
-				updateReminder = updateReminder,
-				navigationContentPosition = navigationContentPosition,
-				selectedDestination = selectedDestination,
-				navigationType = navigationType
-			)
-		}
-	} else {
-		ModalNavigationDrawer(
-			drawerContent = {
-				ModalNavigationDrawerContent(
+	ModalBottomSheetLayout(
+		sheetShape = MaterialTheme.shapes.large,
+		sheetBackgroundColor = MaterialTheme.colorScheme.surface,
+		bottomSheetNavigator = bottomSheetNavigator
+	) {
+		if (navigationType == RemindMeNavigationType.PERMANENT_NAVIGATION_DRAWER) {
+			// TODO check on custom width of PermanentNavigationDrawer: b/232495216
+			PermanentNavigationDrawer(drawerContent = {
+				PermanentNavigationDrawerContent(
 					selectedDestination = selectedDestination,
 					navigationContentPosition = navigationContentPosition,
 					navigateToTopLevelDestination = navigationActions::navigateTo,
+				)
+			}) {
+				RemindMeAppContent(
+					navController = navController,
+					contentType = contentType,
+					displayFeatures = displayFeatures,
+					remindMeUiState = remindMeUiState,
+					navigateToTopLevelDestination = navigationActions::navigateTo,
+					closeReminderScreen = closeReminderScreen,
+					navigateToReminder = navigateToReminder,
+					updateReminder = updateReminder,
+					navigationContentPosition = navigationContentPosition,
+					selectedDestination = selectedDestination,
+					navigationType = navigationType
+				)
+			}
+		} else {
+			ModalNavigationDrawer(
+				drawerState = drawerState,
+				drawerContent = {
+					ModalNavigationDrawerContent(
+						selectedDestination = selectedDestination,
+						navigationContentPosition = navigationContentPosition,
+						navigateToTopLevelDestination = navigationActions::navigateTo,
+						onDrawerClicked = {
+							scope.launch {
+								drawerState.close()
+							}
+						},
+						onFABClicked = {
+							navigationActions.navigateTo(RemindMeTopLevelDestinations.newReminder)
+						}
+					)
+				}
+			) {
+				RemindMeAppContent(
+					navController = navController,
+					contentType = contentType,
+					displayFeatures = displayFeatures,
+					remindMeUiState = remindMeUiState,
+					navigateToTopLevelDestination = navigationActions::navigateTo,
+					closeReminderScreen = closeReminderScreen,
+					navigateToReminder = navigateToReminder,
+					updateReminder = updateReminder,
+					navigationContentPosition = navigationContentPosition,
+					selectedDestination = selectedDestination,
+					navigationType = navigationType,
 					onDrawerClicked = {
 						scope.launch {
-							drawerState.close()
+							drawerState.open()
 						}
 					}
 				)
-			},
-			drawerState = drawerState
-		) {
-			RemindMeAppContent(
-				navController = navController,
-				contentType = contentType,
-				displayFeatures = displayFeatures,
-				remindMeUiState = remindMeUiState,
-				navigateToTopLevelDestination = navigationActions::navigateTo,
-				closeReminderScreen = closeReminderScreen,
-				navigateToReminder = navigateToReminder,
-				updateReminder = updateReminder,
-				navigationContentPosition = navigationContentPosition,
-				selectedDestination = selectedDestination,
-				navigationType = navigationType,
-				onDrawerClicked = {
-					scope.launch {
-						drawerState.open()
-					}
-				}
-			)
+			}
 		}
 	}
 }
@@ -218,6 +233,9 @@ fun RemindMeAppContent(
 				navigationContentPosition = navigationContentPosition,
 				navigateToTopLevelDestination = navigateToTopLevelDestination,
 				onDrawerClicked = onDrawerClicked,
+				onFABClicked = {
+					navigateToTopLevelDestination(RemindMeTopLevelDestinations.newReminder)
+				}
 			)
 		}
 		Column(
@@ -247,6 +265,7 @@ fun RemindMeAppContent(
 	}
 }
 
+@OptIn(ExperimentalMaterialNavigationApi::class)
 @Composable
 private fun RemindMeNavHost(
 	navController: NavHostController,
@@ -275,8 +294,20 @@ private fun RemindMeNavHost(
 				updateReminder = updateReminder
 			)
 		}
+		
 		composable(RemindMeRoute.SETTING) {
 		
+		}
+		
+		bottomSheet(RemindMeRoute.NEW_REMINDER) { backEntry ->
+			val viewModel = hiltViewModel<NewReminderViewModel>(backEntry)
+			
+			NewReminderScreen(
+				viewModel = viewModel,
+				onBack = {
+					navController.popBackStack()
+				}
+			)
 		}
 	}
 }
