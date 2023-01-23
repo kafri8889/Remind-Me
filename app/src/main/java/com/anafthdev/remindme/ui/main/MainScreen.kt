@@ -26,6 +26,7 @@ import com.anafthdev.remindme.data.RemindMeTopLevelDestination
 import com.anafthdev.remindme.data.RemindMeTopLevelDestinations
 import com.anafthdev.remindme.data.ReminderMessageType
 import com.anafthdev.remindme.data.model.Reminder
+import com.anafthdev.remindme.extension.toast
 import com.anafthdev.remindme.ui.remind_me.RemindMeUiState
 import com.anafthdev.remindme.ui.reminder_detail.ReminderDetailScreen
 import com.anafthdev.remindme.ui.reminder_detail.ReminderDetailViewModel
@@ -258,8 +259,14 @@ fun RemindMeReminderDetail(
 				RemindMeTopAppBar(
 					route = RemindMeRoute.REMINDER_DETAIL,
 					contentType = contentType,
+					showSaveButton = !viewModel.autoSave,
 					onNavigationIconClicked = onBackPressed,
-					onTrashClicked = onDeleteReminder
+					onTrashClicked = onDeleteReminder,
+					onSaveClicked = {
+						viewModel.saveReminder()
+						
+						context.getString(R.string.saved).toast(context)
+					}
 				)
 			}
 			

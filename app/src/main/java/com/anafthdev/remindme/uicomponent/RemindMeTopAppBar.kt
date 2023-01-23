@@ -3,6 +3,7 @@ package com.anafthdev.remindme.uicomponent
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.ArrowBack
+import androidx.compose.material.icons.rounded.Check
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -21,9 +22,11 @@ fun RemindMeTopAppBar(
 	route: String,
 	contentType: RemindMeContentType,
 	modifier: Modifier = Modifier,
+	showSaveButton: Boolean = false,
 	onNavigationIconClicked: () -> Unit,
 	onSettingClicked: () -> Unit = {},
-	onTrashClicked: () -> Unit = {}
+	onTrashClicked: () -> Unit = {},
+	onSaveClicked: () -> Unit = {},
 ) {
 	
 	CenterAlignedTopAppBar(
@@ -54,6 +57,15 @@ fun RemindMeTopAppBar(
 								contentDescription = null
 							)
 						}
+						
+						if (showSaveButton) {
+							IconButton(onClick = onSaveClicked) {
+								Icon(
+									imageVector = Icons.Rounded.Check,
+									contentDescription = null
+								)
+							}
+						}
 					}
 					RemindMeRoute.REMINDER_LIST -> {
 						IconButton(onClick = onSettingClicked) {
@@ -72,6 +84,15 @@ fun RemindMeTopAppBar(
 								painter = painterResource(id = R.drawable.ic_trash),
 								contentDescription = null
 							)
+						}
+						
+						if (showSaveButton) {
+							IconButton(onClick = onSaveClicked) {
+								Icon(
+									imageVector = Icons.Rounded.Check,
+									contentDescription = null
+								)
+							}
 						}
 					}
 				}
