@@ -28,4 +28,5 @@
     <string name="delete_reminder">Delete reminder?</string>
     <string name="delete_reminder_message">Are you sure want to delete this reminder?</string>
     <string name="delete">Delete</string>
+    <string name="saved">Saved</string>
 </resources>
