@@ -142,6 +142,7 @@ class MainActivity : FragmentActivity() {
 						uiState = uiState,
 						windowSize = windowSize,
 						displayFeatures = displayFeatures,
+						onDeleteReminder = remindMeViewModel::onDeleteReminder,
 						closeReminderScreen = {
 							remindMeViewModel.closeReminderScreen()
 						},

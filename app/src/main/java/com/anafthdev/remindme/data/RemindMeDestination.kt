@@ -16,22 +16,32 @@
 
 package com.anafthdev.remindme.data
 
+import androidx.navigation.NamedNavArgument
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
+import androidx.navigation.NavType
+import androidx.navigation.navArgument
 import com.anafthdev.remindme.R
 
 object RemindMeRoute {
-	const val HOME = "Home"
-	const val SETTING = "Setting"
-	const val NEW_REMINDER = "New Reminder"
-	const val REMINDER_LIST = "reminder_list"
-	const val REMINDER_DETAIL = "reminder_detail"
+	const val HOME = "home"
+	const val SETTING = "setting"
+	const val NEW_REMINDER = "new-reminder"
+	const val REMINDER_LIST = "reminder-list"
+	const val REMINDER_DETAIL = "reminder-detail"
+	const val CONFIRMATION_DIALOG = "confirmation-dialog"
+}
+
+object RemindMeArgument {
+	const val ARG_TITLE = "arg_title"
+	const val ARG_TEXT = "arg_text"
 }
 
 data class RemindMeTopLevelDestination(
 	val route: String,
 	val selectedIcon: Int,
-	val iconTextId: Int
+	val iconTextId: Int,
+	val arguments: List<NamedNavArgument> = emptyList()
 )
 
 class RemindMeNavigationActions(private val navController: NavHostController) {
@@ -71,6 +81,28 @@ object RemindMeTopLevelDestinations {
 		route = RemindMeRoute.NEW_REMINDER,
 		selectedIcon = -1,
 		iconTextId = -1
+	)
+	
+	val confirmationDialog = RemindMeTopLevelDestination(
+		route = RemindMeRoute.CONFIRMATION_DIALOG,
+		selectedIcon = -1,
+		iconTextId = -1,
+		arguments = listOf(
+			navArgument(
+				name = RemindMeArgument.ARG_TITLE,
+				builder = {
+					type = NavType.StringType
+					nullable = false
+				}
+			),
+			navArgument(
+				name = RemindMeArgument.ARG_TEXT,
+				builder = {
+					type = NavType.StringType
+					nullable = false
+				}
+			)
+		)
 	)
 	
 }

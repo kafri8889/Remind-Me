@@ -13,6 +13,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
 @HiltViewModel
@@ -81,6 +82,26 @@ class RemindMeViewModel @Inject constructor(
 				isDetailOnlyOpen = false,
 				selectedReminder = null
 			)
+	}
+	
+	fun onDeleteReminder(showConfirmationDialog: Boolean, deleteCurrentReminder: Boolean) {
+		viewModelScope.launch {
+			_uiState.value = _uiState.value.copy(
+				showDeleteConfirmationDialog = showConfirmationDialog
+			)
+			
+			if (deleteCurrentReminder) {
+				_uiState.value.selectedReminder?.let {
+					_uiState.value = _uiState.value.copy(
+						selectedReminder = null
+					)
+					
+					withContext(Dispatchers.IO) {
+						reminderRepository.deleteReminder(it.toReminderDb())
+					}
+				}
+			}
+		}
 	}
 
 }

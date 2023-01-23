@@ -1,6 +1,9 @@
 package com.anafthdev.remindme.ui.remind_me
 
 import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -11,14 +14,14 @@ import androidx.compose.material3.windowsizeclass.WindowSizeClass
 import androidx.compose.material3.windowsizeclass.WindowWidthSizeClass
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
-import androidx.navigation.compose.NavHost
-import androidx.navigation.compose.composable
-import androidx.navigation.compose.currentBackStackEntryAsState
-import androidx.navigation.compose.rememberNavController
+import androidx.navigation.compose.*
 import androidx.window.layout.DisplayFeature
 import androidx.window.layout.FoldingFeature
+import com.anafthdev.remindme.R
 import com.anafthdev.remindme.data.RemindMeNavigationActions
 import com.anafthdev.remindme.data.RemindMeRoute
 import com.anafthdev.remindme.data.RemindMeTopLevelDestination
@@ -43,7 +46,8 @@ fun RemindMeApp(
 	displayFeatures: List<DisplayFeature>,
 	closeReminderScreen: () -> Unit = {},
 	navigateToReminder: (Int, RemindMeContentType) -> Unit = { _, _ -> },
-	updateReminder: (Reminder) -> Unit = {}
+	updateReminder: (Reminder) -> Unit = {},
+	onDeleteReminder: (showConfirmationDialog: Boolean, deleteCurrentReminder: Boolean) -> Unit = { _, _ -> }
 ) {
 	
 	var contentType by remember { mutableStateOf(RemindMeContentType.SINGLE_PANE) }
@@ -114,7 +118,8 @@ fun RemindMeApp(
 		remindMeUiState = uiState,
 		closeReminderScreen = closeReminderScreen,
 		navigateToReminder = navigateToReminder,
-		updateReminder = updateReminder
+		updateReminder = updateReminder,
+		onDeleteReminder = onDeleteReminder
 	)
 }
 
@@ -128,7 +133,8 @@ private fun RemindMeNavigationWrapper(
 	remindMeUiState: RemindMeUiState,
 	closeReminderScreen: () -> Unit,
 	navigateToReminder: (Int, RemindMeContentType) -> Unit,
-	updateReminder: (Reminder) -> Unit
+	updateReminder: (Reminder) -> Unit,
+	onDeleteReminder: (showConfirmationDialog: Boolean, deleteCurrentReminder: Boolean) -> Unit
 ) {
 	val scope = rememberCoroutineScope()
 	val drawerState = rememberDrawerState(DrawerValue.Closed)
@@ -147,6 +153,52 @@ private fun RemindMeNavigationWrapper(
 		sheetBackgroundColor = MaterialTheme.colorScheme.surface,
 		bottomSheetNavigator = bottomSheetNavigator
 	) {
+		AnimatedVisibility(
+			visible = remindMeUiState.showDeleteConfirmationDialog,
+			enter = fadeIn(
+				animationSpec = tween(250)
+			),
+			exit = fadeOut(
+				animationSpec = tween(250)
+			)
+		) {
+			AlertDialog(
+				onDismissRequest = {
+					onDeleteReminder(false, false)
+				},
+				icon = {
+					Icon(
+						painter = painterResource(id = R.drawable.ic_trash),
+						contentDescription = null
+					)
+				},
+				title = {
+					Text(stringResource(id = R.string.delete_reminder))
+				},
+				text = {
+					Text(stringResource(id = R.string.delete_reminder_message))
+				},
+				confirmButton = {
+					Button(
+						onClick = {
+							onDeleteReminder(false, true)
+						}
+					) {
+						Text(stringResource(id = R.string.delete))
+					}
+				},
+				dismissButton = {
+					TextButton(
+						onClick = {
+							onDeleteReminder(false, false)
+						}
+					) {
+						Text(stringResource(id = R.string.cancel))
+					}
+				}
+			)
+		}
+		
 		if (navigationType == RemindMeNavigationType.PERMANENT_NAVIGATION_DRAWER) {
 			// TODO check on custom width of PermanentNavigationDrawer: b/232495216
 			PermanentNavigationDrawer(drawerContent = {
@@ -170,7 +222,10 @@ private fun RemindMeNavigationWrapper(
 					updateReminder = updateReminder,
 					navigationContentPosition = navigationContentPosition,
 					selectedDestination = selectedDestination,
-					navigationType = navigationType
+					navigationType = navigationType,
+					onDeleteReminder = {
+						onDeleteReminder(true, false)
+					}
 				)
 			}
 		} else {
@@ -208,6 +263,9 @@ private fun RemindMeNavigationWrapper(
 					navigationContentPosition = navigationContentPosition,
 					selectedDestination = selectedDestination,
 					navigationType = navigationType,
+					onDeleteReminder = {
+						onDeleteReminder(true, false)
+					},
 					onDrawerClicked = {
 						scope.launch {
 							drawerState.open()
@@ -233,7 +291,8 @@ fun RemindMeAppContent(
 	closeReminderScreen: () -> Unit,
 	navigateToReminder: (Int, RemindMeContentType) -> Unit,
 	updateReminder: (Reminder) -> Unit,
-	onDrawerClicked: () -> Unit = {}
+	onDrawerClicked: () -> Unit = {},
+	onDeleteReminder: () -> Unit = {}
 ) {
 	Row(modifier = modifier.fillMaxSize()) {
 		AnimatedVisibility(visible = navigationType == RemindMeNavigationType.NAVIGATION_RAIL) {
@@ -261,6 +320,7 @@ fun RemindMeAppContent(
 				closeReminderScreen = closeReminderScreen,
 				navigateToReminder = navigateToReminder,
 				updateReminder = updateReminder,
+				onDeleteReminder = onDeleteReminder,
 				modifier = Modifier
 					.weight(1f)
 			)
@@ -285,6 +345,7 @@ private fun RemindMeNavHost(
 	closeReminderScreen: () -> Unit,
 	navigateToReminder: (Int, RemindMeContentType) -> Unit,
 	updateReminder: (Reminder) -> Unit,
+	onDeleteReminder: () -> Unit,
 	modifier: Modifier = Modifier,
 ) {
 	NavHost(
@@ -300,7 +361,8 @@ private fun RemindMeNavHost(
 				navigateToTopLevelDestination = navigateToTopLevelDestination,
 				closeReminderScreen = closeReminderScreen,
 				navigateToReminder = navigateToReminder,
-				updateReminder = updateReminder
+				updateReminder = updateReminder,
+				onDeleteReminder = onDeleteReminder
 			)
 		}
 		

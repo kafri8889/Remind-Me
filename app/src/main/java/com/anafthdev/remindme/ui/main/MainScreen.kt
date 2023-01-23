@@ -44,7 +44,8 @@ fun MainScreen(
 	navigateToTopLevelDestination: (RemindMeTopLevelDestination) -> Unit,
 	closeReminderScreen: () -> Unit,
 	navigateToReminder: (Int, RemindMeContentType) -> Unit,
-	updateReminder: (Reminder) -> Unit
+	updateReminder: (Reminder) -> Unit,
+	onDeleteReminder: () -> Unit
 ) {
 	
 	/**
@@ -80,7 +81,8 @@ fun MainScreen(
 				RemindMeReminderDetail(
 					reminder = remindMeUiState.selectedReminder,
 					contentType = contentType,
-					onBackPressed = closeReminderScreen
+					onBackPressed = closeReminderScreen,
+					onDeleteReminder = onDeleteReminder
 				)
 			}
 		)
@@ -92,7 +94,8 @@ fun MainScreen(
 				navigateToTopLevelDestination = navigateToTopLevelDestination,
 				closeDetailScreen = closeReminderScreen,
 				navigateToReminder = navigateToReminder,
-				updateReminder = updateReminder
+				updateReminder = updateReminder,
+				onDeleteReminder = onDeleteReminder
 			)
 		}
 	}
@@ -106,7 +109,8 @@ fun RemindMeSinglePaneContent(
 	navigateToTopLevelDestination: (RemindMeTopLevelDestination) -> Unit,
 	closeDetailScreen: () -> Unit,
 	navigateToReminder: (Int, RemindMeContentType) -> Unit,
-	updateReminder: (Reminder) -> Unit
+	updateReminder: (Reminder) -> Unit,
+	onDeleteReminder: () -> Unit
 ) {
 	
 	if (remindMeUiState.selectedReminder != null && remindMeUiState.isDetailOnlyOpen) {
@@ -116,10 +120,10 @@ fun RemindMeSinglePaneContent(
 		
 		RemindMeReminderDetail(
 			reminder = remindMeUiState.selectedReminder,
-			contentType = RemindMeContentType.SINGLE_PANE
-		) {
-			closeDetailScreen()
-		}
+			contentType = RemindMeContentType.SINGLE_PANE,
+			onDeleteReminder = onDeleteReminder,
+			onBackPressed = closeDetailScreen
+		)
 	} else {
 		RemindMeReminderList(
 			is24Hour = remindMeUiState.userPreferences.is24Hour,
@@ -192,7 +196,8 @@ fun RemindMeReminderDetail(
 	reminder: Reminder?,
 	contentType: RemindMeContentType,
 	modifier: Modifier = Modifier,
-	onBackPressed: () -> Unit = {}
+	onBackPressed: () -> Unit = {},
+	onDeleteReminder: () -> Unit = {}
 ) {
 	
 	val context = LocalContext.current
@@ -253,7 +258,8 @@ fun RemindMeReminderDetail(
 				RemindMeTopAppBar(
 					route = RemindMeRoute.REMINDER_DETAIL,
 					contentType = contentType,
-					onNavigationIconClicked = onBackPressed
+					onNavigationIconClicked = onBackPressed,
+					onTrashClicked = onDeleteReminder
 				)
 			}
 			

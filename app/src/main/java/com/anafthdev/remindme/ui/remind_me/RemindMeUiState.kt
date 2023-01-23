@@ -8,5 +8,6 @@ data class RemindMeUiState(
 	val userPreferences: UserPreferences = UserPreferences(),
 	val selectedReminder: Reminder? = null,
 	val isDetailOnlyOpen: Boolean = false,
+	val showDeleteConfirmationDialog: Boolean = false,
 	val error: String? = null
 )
