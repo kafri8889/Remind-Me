@@ -263,9 +263,10 @@ fun RemindMeReminderDetail(
 					onNavigationIconClicked = onBackPressed,
 					onTrashClicked = onDeleteReminder,
 					onSaveClicked = {
-						viewModel.saveReminder()
+						val saved = viewModel.saveReminder()
 						
-						context.getString(R.string.saved).toast(context)
+						if (saved.isSuccess) context.getString(R.string.saved).toast(context)
+						else saved.exceptionOrNull()?.let { it.message.toast(context) }
 					}
 				)
 			}

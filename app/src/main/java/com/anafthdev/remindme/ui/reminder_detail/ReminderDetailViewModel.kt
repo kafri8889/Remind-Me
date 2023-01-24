@@ -156,7 +156,14 @@ class ReminderDetailViewModel @Inject constructor(
 		if (autoSave && save) saveReminder()
 	}
 	
-	fun saveReminder() {
+	/**
+	 * @return true if saved, false otherwise
+	 */
+	fun saveReminder(): Result<Boolean> {
+		if (reminderName.isBlank()) return Result.failure(
+			Throwable("Reminder name cannot be empty!")
+		)
+		
 		viewModelScope.launch(Dispatchers.IO) {
 			reminderRepository.updateReminder(
 				currentReminder.copy(
@@ -169,6 +176,8 @@ class ReminderDetailViewModel @Inject constructor(
 				).toReminderDb()
 			)
 		}
+		
+		return Result.success(true)
 	}
 	
 }
