@@ -11,7 +11,7 @@ interface ReminderDao {
 	fun getAllReminders(): Flow<List<ReminderDb>>
 	
 	@Query("SELECT * FROM reminder WHERE reminder_id LIKE :mID")
-	fun getReminderById(mID: Int): Flow<ReminderDb>
+	fun getReminderById(mID: Int): Flow<ReminderDb?>
 	
 	@Update
 	fun updateReminder(vararg reminder: ReminderDb)

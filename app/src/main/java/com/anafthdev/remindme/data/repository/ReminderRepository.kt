@@ -5,6 +5,7 @@ import com.anafthdev.remindme.data.local.model.ReminderDb
 import com.anafthdev.remindme.data.model.Reminder
 import com.anafthdev.remindme.extension.toReminder
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.filterNotNull
 import kotlinx.coroutines.flow.map
 import javax.inject.Inject
 
@@ -21,6 +22,7 @@ class ReminderRepository @Inject constructor(
 	
 	fun getReminderById(id: Int): Flow<Reminder> {
 		return reminderDao.getReminderById(id)
+			.filterNotNull()
 			.map { it.toReminder() }
 	}
 	
