@@ -18,9 +18,14 @@ import com.anafthdev.remindme.extension.convert24HourTo12Hour
 import com.anafthdev.remindme.extension.toReminderDb
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.FlowPreview
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
+import timber.log.Timber
 import javax.inject.Inject
 
+@OptIn(FlowPreview::class)
 @HiltViewModel
 class ReminderDetailViewModel @Inject constructor(
 	private val userPreferencesRepository: UserPreferencesRepository,
@@ -66,12 +71,30 @@ class ReminderDetailViewModel @Inject constructor(
 	var repeatOnDays = mutableStateListOf<DayOfWeek>()
 		private set
 	
+	private val _currentReminderId = MutableStateFlow(Reminder.Null.id)
+	private val currentReminderId: StateFlow<Int> = _currentReminderId
+	
 	init {
 		viewModelScope.launch {
 			userPreferencesRepository.getUserPreferences.collect { preferences ->
 				is24Hour = preferences.is24Hour
 				autoSave = preferences.autoSave
 			}
+		}
+		
+		viewModelScope.launch {
+			currentReminderId.collect { id ->
+				reminderRepository.getReminderById(id).collect { collectedReminder ->
+					Timber.i("remingder: $collectedReminder")
+					updateWithReminder(collectedReminder)
+				}
+			}
+//			currentReminderId.flatMapConcat {
+//				reminderRepository.getReminderById(it)
+//			}.collect { collectedReminder ->
+//				Timber.i("remingder: $collectedReminder")
+//				updateWithReminder(collectedReminder)
+//			}
 		}
 	}
 	
@@ -83,9 +106,17 @@ class ReminderDetailViewModel @Inject constructor(
 		minutes = reminder.minute
 		currentReminder = reminder
 		clockPositionValue = if (selectedTimeType == TimeType.Hours) hours + 1 else minutes + 1
+		repeatOnDays.apply {
+			clear()
+			addAll(reminder.repeatOnDays)
+		}
 		messages.apply {
 			clear()
 			addAll(reminder.messages.map { it to ReminderMessageType.Fixed })
+		}
+		
+		viewModelScope.launch {
+			_currentReminderId.emit(reminder.id)
 		}
 	}
 	

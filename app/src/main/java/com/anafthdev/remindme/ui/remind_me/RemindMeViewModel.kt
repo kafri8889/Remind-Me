@@ -38,8 +38,13 @@ class RemindMeViewModel @Inject constructor(
 					_uiState.value = _uiState.value.copy(error = ex.message)
 				}
 				.collect { reminders ->
+					val currentReminder = reminders.find {
+						it.id == (uiState.value.selectedReminder?.id ?: Reminder.Null.id)
+					} ?: _uiState.value.selectedReminder
+					
 					_uiState.value = _uiState.value.copy(
-						reminders = reminders
+						reminders = reminders,
+						selectedReminder = currentReminder
 					)
 				}
 		}
