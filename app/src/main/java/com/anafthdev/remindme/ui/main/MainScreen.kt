@@ -208,6 +208,8 @@ fun RemindMeReminderDetail(
 	
 	val viewModel = hiltViewModel<ReminderDetailViewModel>()
 	
+	val lazyListState = rememberLazyListState()
+	
 	LaunchedEffect(reminder) {
 //		if (reminder == null) {
 //			"No reminder selected".toast(context)
@@ -230,6 +232,8 @@ fun RemindMeReminderDetail(
 					type == ReminderMessageType.Add || text.isBlank()
 				}
 			}
+		} else {
+			lazyListState.animateScrollToItem(lazyListState.layoutInfo.totalItemsCount - 1)
 		}
 	}
 	
@@ -251,6 +255,7 @@ fun RemindMeReminderDetail(
 		}
 	} else {
 		LazyColumn(
+			state = lazyListState,
 			modifier = modifier
 				.fillMaxSize()
 				.systemBarsPadding()
@@ -308,6 +313,7 @@ fun RemindMeReminderDetail(
 							}
 						},
 						modifier = reminderMessageModifier
+							.imePadding()
 					)
 				}
 			}
