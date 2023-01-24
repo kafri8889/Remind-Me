@@ -1,7 +1,11 @@
 package com.anafthdev.remindme.data.model
 
+import android.os.Parcelable
 import com.anafthdev.remindme.data.DayOfWeek
+import kotlinx.parcelize.Parcelize
+import kotlinx.parcelize.RawValue
 
+@Parcelize
 data class Reminder(
 	val id: Int,
 	val name: String,
@@ -12,10 +16,10 @@ data class Reminder(
 	val hour: Int,
 	
 	val minute: Int,
-	val messages: List<String>,
-	val repeatOnDays: List<DayOfWeek>,
+	val messages: @RawValue List<String>,
+	val repeatOnDays: @RawValue List<DayOfWeek>,
 	val isActive: Boolean
-) {
+): Parcelable {
 	companion object {
 		val Null = Reminder(
 			id = -1,
