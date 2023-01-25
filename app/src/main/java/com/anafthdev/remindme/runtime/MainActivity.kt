@@ -16,7 +16,6 @@ import androidx.compose.ui.unit.DpSize
 import androidx.compose.ui.unit.dp
 import androidx.core.view.WindowCompat
 import androidx.fragment.app.FragmentActivity
-import androidx.lifecycle.compose.ExperimentalLifecycleComposeApi
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.lifecycleScope
 import com.anafthdev.remindme.common.*
@@ -41,12 +40,13 @@ import javax.inject.Inject
 class MainActivity : FragmentActivity() {
 	
 	@Inject lateinit var reminderRepository: ReminderRepository
+	@Inject lateinit var remindMeAlarmManager: RemindMeAlarmManager
 	@Inject lateinit var userPreferencesRepository: UserPreferencesRepository
 	
 	private lateinit var pickerManager: PickerManager
 	
 	private val remindMeViewModel: RemindMeViewModel by viewModels(
-		factoryProducer = { RemindMeViewModelFactory(reminderRepository, userPreferencesRepository) }
+		factoryProducer = { RemindMeViewModelFactory(reminderRepository, remindMeAlarmManager, userPreferencesRepository) }
 	)
 	
 	private val _pickerData = MutableStateFlow(PickerData())
@@ -109,7 +109,7 @@ class MainActivity : FragmentActivity() {
 		}
 	}
 	
-	@OptIn(ExperimentalMaterial3WindowSizeClassApi::class, ExperimentalLifecycleComposeApi::class)
+	@OptIn(ExperimentalMaterial3WindowSizeClassApi::class)
 	override fun onCreate(savedInstanceState: Bundle?) {
 		super.onCreate(savedInstanceState)
 		

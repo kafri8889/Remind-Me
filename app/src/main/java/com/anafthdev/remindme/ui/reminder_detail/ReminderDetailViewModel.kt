@@ -22,7 +22,6 @@ import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
-import timber.log.Timber
 import javax.inject.Inject
 
 @OptIn(FlowPreview::class)
@@ -84,17 +83,8 @@ class ReminderDetailViewModel @Inject constructor(
 		
 		viewModelScope.launch {
 			currentReminderId.collect { id ->
-				reminderRepository.getReminderById(id).collect { collectedReminder ->
-					Timber.i("remingder: $collectedReminder")
-					updateWithReminder(collectedReminder)
-				}
+				reminderRepository.getReminderById(id).collect(this@ReminderDetailViewModel::updateWithReminder)
 			}
-//			currentReminderId.flatMapConcat {
-//				reminderRepository.getReminderById(it)
-//			}.collect { collectedReminder ->
-//				Timber.i("remingder: $collectedReminder")
-//				updateWithReminder(collectedReminder)
-//			}
 		}
 	}
 	
