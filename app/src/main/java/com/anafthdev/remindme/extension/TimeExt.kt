@@ -34,3 +34,12 @@ fun convert12HourTo24Hour(
 		else -> hour
 	}
 }
+
+/**
+ * Check if hour is am or pm
+ * @param hour 0-23
+ * @return true if the hour is am, pm if false
+ */
+fun isHourAm(hour: Int): Boolean {
+	return hour < 12
+}
