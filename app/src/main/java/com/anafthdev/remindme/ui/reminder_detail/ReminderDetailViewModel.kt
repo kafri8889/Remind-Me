@@ -15,6 +15,7 @@ import com.anafthdev.remindme.data.repository.ReminderRepository
 import com.anafthdev.remindme.data.repository.UserPreferencesRepository
 import com.anafthdev.remindme.extension.convert12HourTo24Hour
 import com.anafthdev.remindme.extension.convert24HourTo12Hour
+import com.anafthdev.remindme.extension.isHourAm
 import com.anafthdev.remindme.extension.toReminderDb
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
@@ -95,7 +96,11 @@ class ReminderDetailViewModel @Inject constructor(
 		hours = reminder.hour
 		minutes = reminder.minute
 		currentReminder = reminder
-		clockPositionValue = if (selectedTimeType == TimeType.Hours) hours + 1 else minutes + 1
+		hourClockType = if (isHourAm(reminder.hour)) HourClockType.AM else HourClockType.PM
+		clockPositionValue = if (selectedTimeType == TimeType.Hours) {
+			if (isHourAm(reminder.hour)) hours + 1
+			else convert24HourTo12Hour(reminder.hour).first.toInt() + 1
+		} else minutes + 1
 		repeatOnDays.apply {
 			clear()
 			addAll(reminder.repeatOnDays)
