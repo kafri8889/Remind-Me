@@ -6,6 +6,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.anafthdev.remindme.common.RemindMeAlarmManager
 import com.anafthdev.remindme.data.DayOfWeek
 import com.anafthdev.remindme.data.HourClockType
 import com.anafthdev.remindme.data.ReminderMessageType
@@ -29,6 +30,7 @@ import javax.inject.Inject
 @HiltViewModel
 class ReminderDetailViewModel @Inject constructor(
 	private val userPreferencesRepository: UserPreferencesRepository,
+	private val remindMeAlarmManager: RemindMeAlarmManager,
 	private val reminderRepository: ReminderRepository
 ): ViewModel() {
 	
@@ -190,18 +192,23 @@ class ReminderDetailViewModel @Inject constructor(
 			Throwable("Reminder name cannot be empty!")
 		)
 		
+		val mReminder = currentReminder.copy(
+			name = reminderName,
+			hour = hours,
+			minute = minutes,
+			messages = messages.map { it.first },
+			repeatOnDays = repeatOnDays,
+			isActive = isReminderActive
+		)
+		
 		viewModelScope.launch(Dispatchers.IO) {
 			reminderRepository.updateReminder(
-				currentReminder.copy(
-					name = reminderName,
-					hour = hours,
-					minute = minutes,
-					messages = messages.map { it.first },
-					repeatOnDays = repeatOnDays,
-					isActive = isReminderActive
-				).toReminderDb()
+				mReminder.toReminderDb()
 			)
 		}
+		
+		if (isReminderActive) remindMeAlarmManager.validateAndStart(mReminder)
+		else remindMeAlarmManager.cancelReminder(mReminder)
 		
 		return Result.success(true)
 	}
