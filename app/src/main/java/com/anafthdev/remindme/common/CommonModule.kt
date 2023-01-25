@@ -18,4 +18,10 @@ class CommonModule {
 		@ApplicationContext context: Context
 	): RemindMeAlarmManager = RemindMeAlarmManager(context)
 	
+	@Provides
+	@Singleton
+	fun provideRemindMeNotificationManager(
+		@ApplicationContext context: Context
+	): RemindMeNotificationManager = RemindMeNotificationManager(context)
+	
 }
