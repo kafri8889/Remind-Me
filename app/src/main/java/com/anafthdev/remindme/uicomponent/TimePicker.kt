@@ -57,12 +57,13 @@ fun TimePicker(
 	circleRadius: Float,
 	minValue:Int = 0,
 	maxValue:Int = 100,
-	gap: Float = 3f * LocalDensity.current.density, // Jarak line ke center
-	circleThicknessFraction: Float = 0.094f * LocalDensity.current.density,
+	gap: Float = TimePickerDefault.getGap(), // Jarak line ke center
+	circleThicknessFraction: Float = TimePickerDefault.getCircleThicknessFraction(),
 	activeTickColor: Color = MaterialTheme.colorScheme.onPrimaryContainer,
 	inactiveTickColor: Color = MaterialTheme.colorScheme.primary.copy(alpha = 0.24f),
 	onPositionChange: (Int)->Unit
 ) {
+//	LocalDensity.current.density.toast(LocalContext.current)
 	var circleCenter by remember {
 		mutableStateOf(Offset.Zero)
 	}
@@ -95,9 +96,9 @@ fun TimePicker(
 		Canvas(
 			modifier = Modifier
 				.fillMaxSize()
-				.pointerInput(true){
+				.pointerInput(true) {
 					detectDragGestures(
-						onDragStart = {offset ->
+						onDragStart = { offset ->
 							dragStartedAngle = -atan2(
 								x = circleCenter.y - offset.y,
 								y = circleCenter.x - offset.x
@@ -111,14 +112,15 @@ fun TimePicker(
 							) * (180f / PI).toFloat()
 							touchAngle = (touchAngle + 180f).mod(360f)
 							
-							val currentAngle = oldPositionValue*360f/(maxValue-minValue)
+							val currentAngle = oldPositionValue * 360f / (maxValue - minValue)
 							changeAngle = touchAngle - currentAngle
 							
-							val lowerThreshold = currentAngle - (360f / (maxValue-minValue) * 5)
-							val higherThreshold = currentAngle + (360f / (maxValue-minValue) * 5)
+							val lowerThreshold = currentAngle - (360f / (maxValue - minValue) * 5)
+							val higherThreshold = currentAngle + (360f / (maxValue - minValue) * 5)
 							
-							if (dragStartedAngle in lowerThreshold .. higherThreshold){
-								positionValue = (oldPositionValue + (changeAngle / (360f / (maxValue-minValue))).roundToInt())
+							if (dragStartedAngle in lowerThreshold..higherThreshold) {
+								positionValue =
+									(oldPositionValue + (changeAngle / (360f / (maxValue - minValue))).roundToInt())
 								onPositionChange(positionValue)
 							}
 							
@@ -250,3 +252,29 @@ fun TimePicker(
 //
 //	return angle
 //}
+
+object TimePickerDefault {
+	
+	@Composable
+	fun getGap(): Float {
+		
+		return when (val density = LocalDensity.current.density) {
+			in 0f..1f -> 2f * density // ???
+			in 1.1f..2f -> 3f * density
+			in 2.1f..3f -> 6f * density // ???
+			in 3.1f..4f -> 12f * density
+			else -> 4f * density
+		}
+	}
+	
+	@Composable
+	fun getCircleThicknessFraction(): Float {
+		return when (LocalDensity.current.density) {
+			in 0f..1f -> 0.14f
+			in 1.1f..2f -> 0.18f
+			in 2.1f..3f -> 0.22f
+			in 3.1f..4f -> 0.24f
+			else -> 0.14f
+		}
+	}
+}
