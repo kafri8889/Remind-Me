@@ -259,22 +259,22 @@ object TimePickerDefault {
 	fun getGap(): Float {
 		
 		return when (val density = LocalDensity.current.density) {
-			in 0f..1f -> 2f * density // ???
+			in 0f..1f -> -32 * density
 			in 1.1f..2f -> 3f * density
 			in 2.1f..3f -> 6f * density // ???
 			in 3.1f..4f -> 12f * density
-			else -> 4f * density
+			else -> -32 * density
 		}
 	}
 	
 	@Composable
 	fun getCircleThicknessFraction(): Float {
 		return when (LocalDensity.current.density) {
-			in 0f..1f -> 0.14f
+			in 0f..1f -> 0.2f
 			in 1.1f..2f -> 0.18f
 			in 2.1f..3f -> 0.22f
 			in 3.1f..4f -> 0.24f
-			else -> 0.14f
+			else -> 0.2f
 		}
 	}
 }
