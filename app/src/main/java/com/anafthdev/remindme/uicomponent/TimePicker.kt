@@ -14,13 +14,16 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clipToBounds
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.drawscope.rotate
 import androidx.compose.ui.input.pointer.pointerInput
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.anafthdev.remindme.extension.toast
 import kotlin.math.PI
 import kotlin.math.atan2
 import kotlin.math.cos
@@ -61,9 +64,9 @@ fun TimePicker(
 	circleThicknessFraction: Float = TimePickerDefault.getCircleThicknessFraction(),
 	activeTickColor: Color = MaterialTheme.colorScheme.onPrimaryContainer,
 	inactiveTickColor: Color = MaterialTheme.colorScheme.primary.copy(alpha = 0.24f),
-	onPositionChange: (Int)->Unit
+	onPositionChange: (Int) -> Unit
 ) {
-//	LocalDensity.current.density.toast(LocalContext.current)
+	LocalDensity.current.density.toast(LocalContext.current)
 	var circleCenter by remember {
 		mutableStateOf(Offset.Zero)
 	}
@@ -96,6 +99,7 @@ fun TimePicker(
 		Canvas(
 			modifier = Modifier
 				.fillMaxSize()
+				.clipToBounds()
 				.pointerInput(true) {
 					detectDragGestures(
 						onDragStart = { offset ->
@@ -259,22 +263,27 @@ object TimePickerDefault {
 	fun getGap(): Float {
 		
 		return when (val density = LocalDensity.current.density) {
-			in 0f..1f -> -32 * density
-			in 1.1f..2f -> 3f * density
-			in 2.1f..3f -> 6f * density // ???
-			in 3.1f..4f -> 12f * density
-			else -> -32 * density
+			in 0f..1f -> -54f
+			in 1.1f..1.5f -> -16f
+			in 1.6f..2f -> -4f
+			in 2.1f..2.5f -> 16f
+			in 2.6f..3f -> 36f
+			in 3.1f..3.5f -> 12f
+			in 3.6f..4f -> 16f
+			in 4.1f..4.5f -> 20f
+			else -> -32f
 		}
 	}
 	
 	@Composable
 	fun getCircleThicknessFraction(): Float {
-		return when (LocalDensity.current.density) {
-			in 0f..1f -> 0.2f
-			in 1.1f..2f -> 0.18f
-			in 2.1f..3f -> 0.22f
-			in 3.1f..4f -> 0.24f
-			else -> 0.2f
-		}
+//		return when (LocalDensity.current.density) {
+//			in 0f..1f -> 0.2f
+//			in 1.1f..2f -> 0.18f
+//			in 2.1f..3f -> 0.22f
+//			in 3.1f..4f -> 0.24f
+//			else -> 0.2f
+//		}
+		return 0.2f
 	}
 }

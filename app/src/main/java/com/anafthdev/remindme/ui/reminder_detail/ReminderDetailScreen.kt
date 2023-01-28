@@ -28,6 +28,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clipToBounds
 import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.pointer.pointerInput
@@ -205,7 +206,7 @@ private fun TimePicker(
 				animationSpec = tween(600),
 				finishedListener = onAnimationFinished
 			)
-
+			
 			AnimatedVisibility(
 				visible = timeType == TimeType.Hours,
 				enter = fadeIn(
@@ -226,7 +227,7 @@ private fun TimePicker(
 						.rotate(180f)
 				)
 			}
-
+			
 			AnimatedVisibility(
 				visible = timeType == TimeType.Minutes,
 				enter = fadeIn(
@@ -245,6 +246,7 @@ private fun TimePicker(
 						.fillMaxWidth(0.9f)
 						.aspectRatio(1f / 1f)
 						.rotate(180f)
+						.clipToBounds()
 				)
 			}
 		}

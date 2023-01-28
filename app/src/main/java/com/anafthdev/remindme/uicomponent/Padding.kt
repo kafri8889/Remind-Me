@@ -9,7 +9,7 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 
 @Composable
-fun ColumnScope.Padding(
+fun Padding(
 	vertical: Dp = 0.dp,
 	horizontal: Dp = 0.dp,
 	content: @Composable ColumnScope.() -> Unit
