@@ -8,7 +8,11 @@ import android.os.Bundle
 import com.anafthdev.remindme.common.RemindMeAlarmManager
 import com.anafthdev.remindme.common.RemindMeNotificationManager
 import com.anafthdev.remindme.data.AlarmAction
+import com.anafthdev.remindme.data.DayOfWeek
 import com.anafthdev.remindme.data.model.Reminder
+import com.anafthdev.remindme.extension.calendarDayOfWeekFromRemindMeDayOfWeek
+import com.anafthdev.remindme.extension.calendarDayOfWeekToRemindMeDayOfWeek
+import com.anafthdev.remindme.extension.next
 import dagger.hilt.android.AndroidEntryPoint
 import java.util.Calendar
 import javax.inject.Inject
@@ -32,7 +36,32 @@ class ReminderReceiver: BroadcastReceiver() {
 				} ?: Reminder.Null
 				
 				val nextTrigger =  Calendar.getInstance().apply {
-					add(Calendar.DAY_OF_MONTH, 1)
+					if (reminder.repeatOnDays.size == DayOfWeek.values().size) {
+						add(Calendar.DAY_OF_MONTH, 1)
+					} else {
+						val currentDay = calendarDayOfWeekToRemindMeDayOfWeek(get(Calendar.DAY_OF_WEEK))
+						val nextDay = run {
+							var day = currentDay
+							
+							do {
+								day = day.next()
+								
+								if (day in reminder.repeatOnDays) {
+									return@run day
+								}
+							} while (day !in reminder.repeatOnDays)
+							
+							return@run currentDay  // Default value
+						}
+						
+						if (nextDay.ordinal < currentDay.ordinal) {
+							// Jika hari selanjutnya < hari sekarang
+							// Berarti next triggernya minggu besok
+							add(Calendar.WEEK_OF_MONTH, 1)
+						}
+						
+						set(Calendar.DAY_OF_WEEK, calendarDayOfWeekFromRemindMeDayOfWeek(nextDay))
+					}
 					
 					set(Calendar.HOUR_OF_DAY, reminder.hour)
 					set(Calendar.MINUTE, reminder.minute)
