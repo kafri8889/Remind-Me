@@ -22,6 +22,7 @@ import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.Add
 import androidx.compose.material3.FilledTonalButton
+import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Switch
@@ -35,6 +36,7 @@ import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.zIndex
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.window.layout.DisplayFeature
 import com.anafthdev.remindme.R
@@ -169,42 +171,73 @@ fun RemindMeReminderList(
 	updateReminder: (Reminder) -> Unit
 ) {
 
-	LazyColumn(
-		modifier = modifier,
-		state = reminderLazyListState
-	) {
-		item {
-			RemindMeTopAppBar(
-				route = RemindMeRoute.REMINDER_LIST,
-				contentType = contentType,
-				onNavigationIconClicked = {},
-				onSettingClicked = {
-					navigateToTopLevelDestination(RemindMeTopLevelDestinations.setting)
-				}
-			)
-		}
-		
-		items(
-			items = reminders,
-			key = { item: Reminder -> item.id }
-		) { reminder ->
-			ReminderItem(
-				reminder = reminder,
-				is24Hour = is24Hour,
+	Box(modifier = modifier) {
+		if (contentType == RemindMeContentType.SINGLE_PANE) {
+			FloatingActionButton(
 				onClick = {
-					navigateToReminder(reminder.id, contentType)
-				},
-				onCheckedChange = { isActive ->
-					updateReminder(
-						reminder.copy(
-							isActive = isActive
-						)
-					)
+					navigateToTopLevelDestination(RemindMeTopLevelDestinations.newReminder)
 				},
 				modifier = Modifier
-					.padding(8.dp)
-					.fillMaxWidth()
-			)
+					.padding(32.dp)
+					.align(Alignment.BottomEnd)
+					.zIndex(2f)
+			) {
+				Icon(
+					imageVector = Icons.Rounded.Add,
+					contentDescription = null
+				)
+			}
+		}
+		
+		if (reminders.isNotEmpty()) {
+			LazyColumn(
+				state = reminderLazyListState,
+				modifier = Modifier
+					.fillMaxSize()
+			) {
+				item {
+					RemindMeTopAppBar(
+						route = RemindMeRoute.REMINDER_LIST,
+						contentType = contentType,
+						onNavigationIconClicked = {},
+						onSettingClicked = {
+							navigateToTopLevelDestination(RemindMeTopLevelDestinations.setting)
+						}
+					)
+				}
+				
+				items(
+					items = reminders,
+					key = { item: Reminder -> item.id }
+				) { reminder ->
+					ReminderItem(
+						reminder = reminder,
+						is24Hour = is24Hour,
+						onClick = {
+							navigateToReminder(reminder.id, contentType) },
+						onCheckedChange = { isActive ->
+							updateReminder(
+								reminder.copy(
+									isActive = isActive
+								)
+							) },
+						modifier = Modifier
+							.padding(8.dp)
+							.fillMaxWidth()
+					)
+				}
+			}
+		} else {
+			Box(
+				contentAlignment = Alignment.Center,
+				modifier = Modifier
+					.fillMaxSize()
+			) {
+				Text(
+					text = stringResource(id = R.string.no_reminder),
+					style = MaterialTheme.typography.bodyMedium
+				)
+			}
 		}
 	}
 }
