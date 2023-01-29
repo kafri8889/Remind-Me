@@ -18,6 +18,7 @@ data class Reminder(
 	val minute: Int,
 	val messages: @RawValue List<String>,
 	val repeatOnDays: @RawValue List<DayOfWeek>,
+	val randomMessage: Boolean,
 	val isActive: Boolean
 ): Parcelable {
 	companion object {
@@ -28,6 +29,7 @@ data class Reminder(
 			minute = 0,
 			messages = emptyList(),
 			repeatOnDays = emptyList(),
+			randomMessage = true,
 			isActive = false
 		)
 	}

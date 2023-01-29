@@ -35,6 +35,7 @@ class NewReminderViewModel @Inject constructor(
 					minute = 0,
 					messages = emptyList(),
 					repeatOnDays = emptyList(),
+					randomMessage = true,
 					isActive = false
 				)
 			)

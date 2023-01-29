@@ -52,6 +52,9 @@ class ReminderDetailViewModel @Inject constructor(
 	var isReminderActive by mutableStateOf(false)
 		private set
 	
+	var isReminderMessageRandom by mutableStateOf(true)
+		private set
+	
 	var is24Hour by mutableStateOf(false)
 		private set
 	
@@ -94,6 +97,7 @@ class ReminderDetailViewModel @Inject constructor(
 	fun updateWithReminder(reminder: Reminder) {
 		updateReminderName(reminder.name, false)
 		updateIsReminderActive(reminder.isActive, false)
+		updateIsReminderReminderMessageRandom(reminder.randomMessage, false)
 		
 		hours = reminder.hour
 		minutes = reminder.minute
@@ -184,6 +188,12 @@ class ReminderDetailViewModel @Inject constructor(
 		if (autoSave && save) saveReminder()
 	}
 	
+	fun updateIsReminderReminderMessageRandom(random: Boolean, save: Boolean = true) {
+		isReminderMessageRandom = random
+		
+		if (autoSave && save) saveReminder()
+	}
+	
 	/**
 	 * @return true if saved, false otherwise
 	 */
@@ -198,6 +208,7 @@ class ReminderDetailViewModel @Inject constructor(
 			minute = minutes,
 			messages = messages.map { it.first },
 			repeatOnDays = repeatOnDays,
+			randomMessage = isReminderMessageRandom,
 			isActive = isReminderActive
 		)
 		

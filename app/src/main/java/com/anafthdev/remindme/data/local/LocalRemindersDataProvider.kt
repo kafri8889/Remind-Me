@@ -13,6 +13,7 @@ object LocalRemindersDataProvider {
 			minute = 23,
 			messages = listOf("Message 1", "Looooooooonnnnggggggggg Messageeeee", "Message 2"),
 			repeatOnDays = listOf(DayOfWeek.Sunday, DayOfWeek.Tuesday, DayOfWeek.Thursday, DayOfWeek.Friday),
+			randomMessage = true,
 			isActive = true
 		),
 		Reminder(
@@ -22,6 +23,7 @@ object LocalRemindersDataProvider {
 			minute = 23,
 			messages = listOf("Message 1", "Looooooooonnnnggggggggg Messageeeee", "Message 2"),
 			repeatOnDays = listOf(DayOfWeek.Monday, DayOfWeek.Thursday, DayOfWeek.Saturday),
+			randomMessage = false,
 			isActive = false
 		),
 	)

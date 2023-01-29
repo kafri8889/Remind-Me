@@ -43,7 +43,7 @@ import com.anafthdev.remindme.data.TimeType
 import com.anafthdev.remindme.uicomponent.AnimatedScaleText
 import com.anafthdev.remindme.uicomponent.DayOfWeekSelector
 import com.anafthdev.remindme.uicomponent.HourClockSelector
-import com.anafthdev.remindme.uicomponent.Padding
+import com.anafthdev.remindme.uicomponent.PaddingCol
 import com.anafthdev.remindme.uicomponent.TimePicker
 import com.anafthdev.remindme.uicomponent.TimeSelector
 
@@ -103,7 +103,7 @@ fun ReminderDetailScreen(
 		
 		Spacer(modifier = Modifier.height(16.dp))
 		
-		Padding(
+		PaddingCol(
 			horizontal = 8.dp
 		) {
 			Text(

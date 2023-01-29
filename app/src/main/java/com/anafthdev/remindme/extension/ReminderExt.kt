@@ -11,6 +11,7 @@ fun Reminder.toReminderDb(): ReminderDb {
 		minute = minute,
 		messages = messages,
 		repeatOnDays = repeatOnDays,
+		randomMessage = randomMessage,
 		isActive = isActive
 	)
 }

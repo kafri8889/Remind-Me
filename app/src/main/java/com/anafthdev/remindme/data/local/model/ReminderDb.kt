@@ -13,5 +13,6 @@ data class ReminderDb(
 	@ColumnInfo(name = "reminder_minute") val minute: Int,
 	@ColumnInfo(name = "reminder_messages") val messages: List<String>,
 	@ColumnInfo(name = "reminder_repeatOnDays") val repeatOnDays: List<DayOfWeek>,
+	@ColumnInfo(name = "reminder_randomMessage") val randomMessage: Boolean,
 	@ColumnInfo(name = "reminder_isActive") val isActive: Boolean
 )

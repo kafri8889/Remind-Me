@@ -12,7 +12,7 @@ import com.anafthdev.remindme.data.local.model.ReminderDb
 	entities = [
 		ReminderDb::class
 	],
-	version = 1
+	version = 2
 )
 @TypeConverters(AppDatabaseTypeConverter::class)
 abstract class AppDatabase: RoomDatabase() {
@@ -26,6 +26,7 @@ abstract class AppDatabase: RoomDatabase() {
 			if (INSTANCE == null) {
 				synchronized(AppDatabase::class) {
 					INSTANCE = Room.databaseBuilder(context, AppDatabase::class.java, "app.db")
+						.fallbackToDestructiveMigration()
 						.build()
 				}
 			}
