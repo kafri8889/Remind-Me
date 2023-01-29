@@ -30,4 +30,5 @@
     <string name="delete">Delete</string>
     <string name="saved">Saved</string>
     <string name="random_message">Random message</string>
+    <string name="no_message">No message</string>
 </resources>

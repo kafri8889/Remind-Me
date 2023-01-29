@@ -2,6 +2,7 @@ package com.anafthdev.remindme.ui.main
 
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.foundation.layout.Spacer
@@ -32,6 +33,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.window.layout.DisplayFeature
@@ -298,6 +300,38 @@ fun RemindMeReminderDetail(
 				)
 			}
 			
+			item {
+				PaddingRow(
+					horizontal = 8.dp,
+					verticalAlignment = Alignment.CenterVertically
+				) {
+					Text(
+						text = stringResource(id = R.string.random_message),
+						style = MaterialTheme.typography.titleMedium
+					)
+					
+					Spacer(modifier = Modifier.weight(1f))
+					
+					Switch(
+						checked = viewModel.isReminderMessageRandom,
+						onCheckedChange = viewModel::updateIsReminderReminderMessageRandom
+					)
+				}
+			}
+			
+			item {
+				Spacer(modifier = Modifier.height(8.dp))
+			}
+			
+			item {
+				Text(
+					text = stringResource(id = R.string.message),
+					style = MaterialTheme.typography.titleMedium,
+					modifier = Modifier
+						.padding(horizontal = 8.dp)
+				)
+			}
+			
 			itemsIndexed(viewModel.messages) { i, (text, type) ->
 				val reminderMessageModifier = Modifier
 					.padding(
@@ -334,22 +368,26 @@ fun RemindMeReminderDetail(
 				}
 			}
 			
-			item {
-				PaddingRow(
-					horizontal = 8.dp,
-					verticalAlignment = Alignment.CenterVertically
-				) {
-					Text(
-						text = stringResource(id = R.string.random_message),
-						style = MaterialTheme.typography.titleMedium
-					)
-					
-					Spacer(modifier = Modifier.weight(1f))
-					
-					Switch(
-						checked = viewModel.isReminderMessageRandom,
-						onCheckedChange = viewModel::updateIsReminderReminderMessageRandom
-					)
+			if (viewModel.messages.isEmpty()) {
+				item { 
+					Box(
+						modifier = Modifier
+							.padding(8.dp)
+							.border(
+								width = 1.dp,
+								shape = MaterialTheme.shapes.medium,
+								color = MaterialTheme.colorScheme.outline
+							)
+					) {
+						Text(
+							text = stringResource(id = R.string.no_message),
+							style = MaterialTheme.typography.bodyMedium,
+							textAlign = TextAlign.Center,
+							modifier = Modifier
+								.padding(8.dp)
+								.fillMaxWidth()
+						)
+					}
 				}
 			}
 			

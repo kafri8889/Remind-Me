@@ -103,9 +103,7 @@ fun ReminderDetailScreen(
 		
 		Spacer(modifier = Modifier.height(16.dp))
 		
-		PaddingCol(
-			horizontal = 8.dp
-		) {
+		PaddingCol(horizontal = 8.dp) {
 			Text(
 				text = stringResource(id = R.string.repeat),
 				style = MaterialTheme.typography.titleMedium
@@ -168,16 +166,7 @@ fun ReminderDetailScreen(
 					.fillMaxWidth()
 			)
 			
-			
-			
-			Spacer(modifier = Modifier.height(16.dp))
-			
-			
-			
-			Text(
-				text = stringResource(id = R.string.message),
-				style = MaterialTheme.typography.titleMedium
-			)
+			Spacer(modifier = Modifier.height(8.dp))
 		}
 	}
 }
