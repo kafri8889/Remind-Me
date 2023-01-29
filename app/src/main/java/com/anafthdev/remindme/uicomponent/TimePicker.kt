@@ -19,11 +19,9 @@ import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.drawscope.rotate
 import androidx.compose.ui.input.pointer.pointerInput
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.anafthdev.remindme.extension.toast
 import kotlin.math.PI
 import kotlin.math.atan2
 import kotlin.math.cos
@@ -66,7 +64,7 @@ fun TimePicker(
 	inactiveTickColor: Color = MaterialTheme.colorScheme.primary.copy(alpha = 0.24f),
 	onPositionChange: (Int) -> Unit
 ) {
-	LocalDensity.current.density.toast(LocalContext.current)
+//	LocalDensity.current.density.toast(LocalContext.current)
 	var circleCenter by remember {
 		mutableStateOf(Offset.Zero)
 	}
