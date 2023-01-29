@@ -13,3 +13,8 @@
 .externalNativeBuild
 .cxx
 local.properties
+/.idea/kotlinc.xml
+/hs_err_pid7004.log
+/hs_err_pid15920.log
+/replay_pid7004.log
+/replay_pid15920.log
