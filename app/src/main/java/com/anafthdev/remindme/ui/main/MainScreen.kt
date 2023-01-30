@@ -4,6 +4,7 @@ import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.WindowInsets
@@ -228,15 +229,26 @@ fun RemindMeReminderList(
 				}
 			}
 		} else {
-			Box(
-				contentAlignment = Alignment.Center,
-				modifier = Modifier
-					.fillMaxSize()
-			) {
-				Text(
-					text = stringResource(id = R.string.no_reminder),
-					style = MaterialTheme.typography.bodyMedium
+			Column {
+				RemindMeTopAppBar(
+					route = RemindMeRoute.REMINDER_LIST,
+					contentType = contentType,
+					onNavigationIconClicked = {},
+					onSettingClicked = {
+						navigateToTopLevelDestination(RemindMeTopLevelDestinations.setting)
+					}
 				)
+				
+				Box(
+					contentAlignment = Alignment.Center,
+					modifier = Modifier
+						.fillMaxSize()
+				) {
+					Text(
+						text = stringResource(id = R.string.no_reminder),
+						style = MaterialTheme.typography.bodyMedium
+					)
+				}
 			}
 		}
 	}
