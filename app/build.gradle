@@ -62,7 +62,7 @@ android {
         compose true
     }
     composeOptions {
-        kotlinCompilerExtensionVersion '1.3.2'
+        kotlinCompilerExtensionVersion '1.4.0'
     }
     packagingOptions {
         resources {
@@ -109,12 +109,17 @@ wire {
 }
 dependencies {
 
+    kapt "org.jetbrains.kotlinx:kotlinx-metadata-jvm:0.5.0"
+
     implementation 'androidx.core:core-ktx:1.9.0'
     implementation 'androidx.activity:activity-compose:1.6.1'
     implementation "androidx.compose.ui:ui:$compose_version"
     implementation "androidx.compose.ui:ui-tooling-preview:$compose_version"
     implementation "androidx.compose.ui:ui-util:$compose_version"
-    implementation "androidx.compose.runtime:runtime-livedata:$compose_version"
+    implementation "androidx.compose.runtime:runtime-livedata:1.3.3"
+//    implementation "androidx.compose.runtime:runtime-livedata:$compose_version"
+    implementation "androidx.compose.animation:animation:1.3.3"
+//    implementation "androidx.compose.animation:animation:$compose_version"
     implementation "androidx.navigation:navigation-compose:2.5.3"
     implementation "androidx.hilt:hilt-navigation-compose:1.0.0"
 
@@ -122,10 +127,10 @@ dependencies {
     implementation "androidx.constraintlayout:constraintlayout-compose:1.0.1"
 
     // Material Design
-    implementation 'com.google.android.material:material:1.7.0'
+    implementation 'com.google.android.material:material:1.8.0'
     implementation "androidx.compose.material:material:1.3.1"
     implementation "androidx.compose.material:material-icons-extended:1.3.1"
-    implementation "androidx.compose.material3:material3:1.1.0-alpha04"
+    implementation "androidx.compose.material3:material3:1.1.0-alpha05"
     implementation "androidx.compose.material3:material3-window-size-class:1.0.1"
 
     // Large screen support
@@ -141,7 +146,7 @@ dependencies {
 //    implementation  'com.google.protobuf:protobuf-kotlin-lite:3.19.1'
 
     // Lifecycle
-    implementation "androidx.lifecycle:lifecycle-runtime-compose:2.6.0-alpha04"
+    implementation "androidx.lifecycle:lifecycle-runtime-compose:2.6.0-alpha05"
     implementation "androidx.lifecycle:lifecycle-livedata-ktx:2.5.1"
     implementation 'androidx.lifecycle:lifecycle-runtime-ktx:2.5.1'
     implementation 'androidx.lifecycle:lifecycle-viewmodel-ktx:2.5.1'
@@ -151,10 +156,10 @@ dependencies {
     kapt 'androidx.lifecycle:lifecycle-common-java8:2.5.1'
 
     // Dependency Injection
-    implementation 'com.google.dagger:hilt-android:2.42'
+    implementation 'com.google.dagger:hilt-android:2.44.2'
     kapt 'androidx.hilt:hilt-compiler:1.0.0'
-    kapt 'com.google.dagger:hilt-compiler:2.42'
-    kapt 'com.google.dagger:hilt-android-compiler:2.39.1'
+    kapt 'com.google.dagger:hilt-compiler:2.44.2'
+    kapt 'com.google.dagger:hilt-android-compiler:2.44.2'
 
     // Datastore
     implementation "androidx.datastore:datastore:1.0.0"
@@ -172,6 +177,7 @@ dependencies {
     implementation "com.google.accompanist:accompanist-navigation-material:$accompanist_version"
     implementation "com.google.accompanist:accompanist-navigation-animation:$accompanist_version"
     implementation "com.google.accompanist:accompanist-flowlayout:$accompanist_version"
+    implementation "com.google.accompanist:accompanist-permissions:$accompanist_version"
     implementation "com.google.accompanist:accompanist-systemuicontroller:$accompanist_version"
 
     // Other
@@ -184,8 +190,8 @@ dependencies {
     androidTestImplementation 'androidx.test.ext:junit:1.1.5'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.5.1'
     androidTestImplementation "androidx.compose.ui:ui-test-junit4:$compose_version"
-    androidTestImplementation 'com.google.dagger:hilt-android-testing:2.38.1'
+    androidTestImplementation 'com.google.dagger:hilt-android-testing:2.44.2'
     debugImplementation "androidx.compose.ui:ui-tooling:$compose_version"
     debugImplementation "androidx.compose.ui:ui-test-manifest:$compose_version"
-    kaptAndroidTest 'com.google.dagger:hilt-android-compiler:2.39.1'
+    kaptAndroidTest 'com.google.dagger:hilt-android-compiler:2.44.2'
 }
