@@ -35,4 +35,5 @@
     <string name="info">Info</string>
     <string name="app_info">App info</string>
     <string name="source_code">Source code</string>
+    <string name="grant_post_notification_permission">Grant post notification permission</string>
 </resources>

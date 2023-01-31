@@ -1,5 +1,8 @@
 package com.anafthdev.remindme.ui.main
 
+import android.Manifest
+import android.content.pm.PackageManager
+import android.os.Build
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.border
@@ -22,6 +25,7 @@ import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.Add
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FilledTonalButton
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
@@ -29,16 +33,25 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
+import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
+import androidx.core.content.ContextCompat
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.LifecycleEventObserver
 import androidx.window.layout.DisplayFeature
 import com.anafthdev.remindme.R
 import com.anafthdev.remindme.data.RemindMeRoute
@@ -46,6 +59,7 @@ import com.anafthdev.remindme.data.RemindMeTopLevelDestination
 import com.anafthdev.remindme.data.RemindMeTopLevelDestinations
 import com.anafthdev.remindme.data.ReminderMessageType
 import com.anafthdev.remindme.data.model.Reminder
+import com.anafthdev.remindme.extension.openSettings
 import com.anafthdev.remindme.extension.toast
 import com.anafthdev.remindme.ui.remind_me.RemindMeUiState
 import com.anafthdev.remindme.ui.reminder_detail.ReminderDetailScreen
@@ -57,6 +71,9 @@ import com.anafthdev.remindme.uicomponent.ReminderMessageItem
 import com.anafthdev.remindme.utils.RemindMeContentType
 import com.google.accompanist.adaptive.HorizontalTwoPaneStrategy
 import com.google.accompanist.adaptive.TwoPane
+import com.google.accompanist.permissions.ExperimentalPermissionsApi
+import com.google.accompanist.permissions.isGranted
+import com.google.accompanist.permissions.rememberPermissionState
 
 @Composable
 fun MainScreen(
@@ -160,6 +177,7 @@ fun RemindMeSinglePaneContent(
 	}
 }
 
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalPermissionsApi::class)
 @Composable
 fun RemindMeReminderList(
 	is24Hour: Boolean,
@@ -172,6 +190,50 @@ fun RemindMeReminderList(
 	updateReminder: (Reminder) -> Unit
 ) {
 
+	val context = LocalContext.current
+	val lifecycleOwner = LocalLifecycleOwner.current
+	
+	var permissionRequested by remember { mutableStateOf(false) }
+	
+	var postNotificationGranted by remember {
+		mutableStateOf(
+			if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+				ContextCompat.checkSelfPermission(context, Manifest.permission.POST_NOTIFICATIONS) == PackageManager.PERMISSION_GRANTED
+			} else true
+		)
+	}
+	
+	val postNotificationPermission = rememberPermissionState(
+		permission = Manifest.permission.POST_NOTIFICATIONS,
+		onPermissionResult = { granted ->
+			postNotificationGranted = granted
+			
+			if (!granted) {
+				permissionRequested = true
+			}
+		}
+	)
+	
+	if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+		DisposableEffect(lifecycleOwner) {
+			// Create an observer that triggers our remembered callbacks
+			// for sending analytics events
+			val observer = LifecycleEventObserver { _, event ->
+				if (event == Lifecycle.Event.ON_START) {
+					postNotificationGranted = ContextCompat.checkSelfPermission(context, Manifest.permission.POST_NOTIFICATIONS) == PackageManager.PERMISSION_GRANTED
+				}
+			}
+			
+			// Add the observer to the lifecycle
+			lifecycleOwner.lifecycle.addObserver(observer)
+			
+			// When the effect leaves the Composition, remove the observer
+			onDispose {
+				lifecycleOwner.lifecycle.removeObserver(observer)
+			}
+		}
+	}
+	
 	Box(modifier = modifier) {
 		if (contentType == RemindMeContentType.SINGLE_PANE) {
 			FloatingActionButton(
@@ -207,6 +269,31 @@ fun RemindMeReminderList(
 					)
 				}
 				
+				if (!postNotificationGranted) {
+					item {
+						FilledTonalButton(
+							onClick = {
+								when {
+									!permissionRequested && !postNotificationPermission.status.isGranted -> {
+										postNotificationPermission.launchPermissionRequest()
+									}
+//									postNotificationPermission.status.shouldShowRationale -> {}
+									else -> {
+										context.openSettings()
+									}
+								}
+							},
+							modifier = Modifier
+								.padding(horizontal = 8.dp)
+								.fillMaxWidth()
+						) {
+							Text(
+								text = stringResource(id = R.string.grant_post_notification_permission)
+							)
+						}
+					}
+				}
+				
 				items(
 					items = reminders,
 					key = { item: Reminder -> item.id }
@@ -214,6 +301,7 @@ fun RemindMeReminderList(
 					ReminderItem(
 						reminder = reminder,
 						is24Hour = is24Hour,
+						enabled = postNotificationGranted,
 						onClick = {
 							navigateToReminder(reminder.id, contentType) },
 						onCheckedChange = { isActive ->
@@ -221,7 +309,8 @@ fun RemindMeReminderList(
 								reminder.copy(
 									isActive = isActive
 								)
-							) },
+							)
+						},
 						modifier = Modifier
 							.padding(8.dp)
 							.fillMaxWidth()
