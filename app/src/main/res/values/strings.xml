@@ -32,4 +32,7 @@
     <string name="random_message">Random message</string>
     <string name="no_message">No message</string>
     <string name="no_reminder">No reminder</string>
+    <string name="info">Info</string>
+    <string name="app_info">App info</string>
+    <string name="source_code">Source code</string>
 </resources>
