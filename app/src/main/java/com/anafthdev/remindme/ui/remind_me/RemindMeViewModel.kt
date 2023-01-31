@@ -67,8 +67,11 @@ class RemindMeViewModel @Inject constructor(
 	}
 	
 	fun updateReminder(reminder: Reminder) {
-		if (reminder.isActive) remindMeAlarmManager.validateAndStart(reminder)
-		else remindMeAlarmManager.cancelReminder(reminder)
+		if (reminder.isActive) {
+			if (reminder.repeatOnDays.isNotEmpty()) {
+				remindMeAlarmManager.validateAndStart(reminder)
+			}
+		} else remindMeAlarmManager.cancelReminder(reminder)
 		
 		viewModelScope.launch(Dispatchers.IO) {
 			reminderRepository.updateReminder(reminder.toReminderDb())
@@ -102,6 +105,8 @@ class RemindMeViewModel @Inject constructor(
 			
 			if (deleteCurrentReminder) {
 				_uiState.value.selectedReminder?.let {
+					remindMeAlarmManager.cancelReminder(it)
+					
 					_uiState.value = _uiState.value.copy(
 						selectedReminder = null
 					)

@@ -406,6 +406,8 @@ fun RemindMeReminderDetail(
 								
 								add(message to ReminderMessageType.Fixed)
 							}
+							
+							viewModel.saveReminder()
 						},
 						modifier = reminderMessageModifier
 							.imePadding()
