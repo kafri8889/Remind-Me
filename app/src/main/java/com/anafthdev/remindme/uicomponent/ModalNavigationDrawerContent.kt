@@ -1,13 +1,29 @@
 package com.anafthdev.remindme.uicomponent
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.WindowInsetsSides
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.only
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.systemBars
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.MenuOpen
 import androidx.compose.material.icons.rounded.Add
-import androidx.compose.material3.*
+import androidx.compose.material3.ExtendedFloatingActionButton
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.ModalDrawerSheet
+import androidx.compose.material3.NavigationDrawerItem
+import androidx.compose.material3.NavigationDrawerItemDefaults
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -26,7 +42,6 @@ import com.anafthdev.remindme.data.RemindMeTopLevelDestination
 import com.anafthdev.remindme.data.TOP_LEVEL_DESTINATIONS
 import com.anafthdev.remindme.utils.RemindMeNavigationContentPosition
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ModalNavigationDrawerContent(
 	selectedDestination: String,
@@ -35,7 +50,10 @@ fun ModalNavigationDrawerContent(
 	onDrawerClicked: () -> Unit = {},
 	onFABClicked: () -> Unit = {},
 ) {
-	ModalDrawerSheet {
+	ModalDrawerSheet(
+		windowInsets = WindowInsets.systemBars
+			.only(WindowInsetsSides.Bottom + WindowInsetsSides.Start)
+	) {
 		// TODO remove custom nav drawer content positioning when NavDrawer component supports it. ticket : b/232495216
 		Layout(
 			modifier = Modifier
